@@ -14,7 +14,7 @@ func IDName(Pesan itmodel.IteungMessage, db *mongo.Database) (reply string) {
 	longitude := fmt.Sprintf("%f", Pesan.Longitude)
 	latitude := fmt.Sprintf("%f", Pesan.Latitude)
 
-	return "Hai.. hai.. kakak atas nama:\n" + Pesan.Alias_name + "\nLongitude: " + longitude + "\nLatitude: " + latitude + "\nLokasi:" + GetLokasi(db, Pesan.Longitude, Pesan.Latitude) + "\nberhasil absen\nmakasih"
+	return "Hai.. hai.. kakak atas nama:\n" + Pesan.Alias_name + "\nLongitude: " + longitude + "\nLatitude: " + latitude + "\nLokasi:" + GetLokasi(db, Pesan.Longitude, Pesan.Latitude) + "\nTelah berhasil melakukan absen\nTerimakasih"
 }
 
 func GetLokasi(mongoconn *mongo.Database, long float64, lat float64) (namalokasi string) {
