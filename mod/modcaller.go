@@ -4,7 +4,6 @@ import (
 	"github.com/gocroot/mod/idgrup"
 	"github.com/gocroot/mod/idname"
 	"github.com/gocroot/mod/lldikti"
-	"github.com/gocroot/mod/tes"
 	"github.com/whatsauth/itmodel"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -14,9 +13,11 @@ func Caller(Modulename string, Pesan itmodel.IteungMessage, db *mongo.Database) 
 	case "idgrup":
 		reply = idgrup.IDGroup(Pesan)
 	case "idname":
-		reply = idname.IDName(Pesan, db)
-	case "tes":
-		reply = tes.Tes(Pesan)
+		// 	reply = idname.IDName(Pesan, db)
+		// case "idname-masuk":
+		reply = idname.IDNameMasuk(Pesan, db)
+	case "idname-pulang":
+		reply = idname.IDNamePulang(Pesan, db)
 	case "lldikti":
 		reply = lldikti.Lldikti(Pesan)
 	}
