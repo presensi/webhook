@@ -12,9 +12,7 @@ func Caller(Modulename string, Pesan itmodel.IteungMessage, db *mongo.Database) 
 	switch Modulename {
 	case "idgrup":
 		reply = idgrup.IDGroup(Pesan)
-	case "idname":
-		// 	reply = idname.IDName(Pesan, db)
-		// case "idname-masuk":
+	case "idname-masuk":
 		reply = idname.IDNameMasuk(Pesan, db)
 	case "idname-pulang":
 		reply = idname.IDNamePulang(Pesan, db)
