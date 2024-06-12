@@ -41,34 +41,34 @@ type PresensiSelfie struct {
 	Filehash    string             `json:"filehash,omitempty" bson:"filehash,omitempty"`
 }
 
-// type FaceDetect struct {
-// 	IDUser    string `json:"iduser,omitempty" bson:"iduser,omitempty"`
-// 	IDFile    string `json:"idfile,omitempty" bson:"idfile,omitempty"`
-// 	Nfaces    int    `json:"nfaces,omitempty" bson:"nfaces,omitempty"`
-// 	Base64Str string `json:"base64str,omitempty" bson:"base64str,omitempty"`
-// }
+type FaceDetect struct {
+	IDUser    string `json:"iduser,omitempty" bson:"iduser,omitempty"`
+	IDFile    string `json:"idfile,omitempty" bson:"idfile,omitempty"`
+	Nfaces    int    `json:"nfaces,omitempty" bson:"nfaces,omitempty"`
+	Base64Str string `json:"base64str,omitempty" bson:"base64str,omitempty"`
+}
 
-// type Config struct {
-// 	PhoneNumber          string `json:"phonenumber,omitempty" bson:"phonenumber,omitempty"`
-// 	LeaflyURL            string `json:"leaflyurl,omitempty" bson:"leaflyurl,omitempty"`
-// 	LeaflySecret         string `json:"leaflysecret,omitempty" bson:"leaflysecret,omitempty"`
-// 	DomyikadoPresensiURL string `json:"domyikadopresensiurl,omitempty" bson:"domyikadopresensiurl,omitempty"`
-// 	DomyikadoSecret      string `json:"domyikadosecret,omitempty" bson:"domyikadosecret,omitempty"`
-// }
+type Config struct {
+	PhoneNumber          string `json:"phonenumber,omitempty" bson:"phonenumber,omitempty"`
+	LeaflyURL            string `json:"leaflyurl,omitempty" bson:"leaflyurl,omitempty"`
+	LeaflySecret         string `json:"leaflysecret,omitempty" bson:"leaflysecret,omitempty"`
+	DomyikadoPresensiURL string `json:"domyikadopresensiurl,omitempty" bson:"domyikadopresensiurl,omitempty"`
+	DomyikadoSecret      string `json:"domyikadosecret,omitempty" bson:"domyikadosecret,omitempty"`
+}
 
-// type FaceInfo struct {
-// 	PhoneNumber string `phonenumber:"secret,omitempty" bson:"phonenumber,omitempty"`
-// 	Commit      string `json:"commit,omitempty" bson:"commit,omitempty"`
-// 	Remaining   int    `json:"remaining,omitempty" bson:"remaining,omitempty"`
-// 	FileHash    string `json:"filehash,omitempty" bson:"filehash,omitempty"`
-// 	Error       string `json:"error,omitempty" bson:"error,omitempty"`
-// }
+type FaceInfo struct {
+	PhoneNumber string `phonenumber:"secret,omitempty" bson:"phonenumber,omitempty"`
+	Commit      string `json:"commit,omitempty" bson:"commit,omitempty"`
+	Remaining   int    `json:"remaining,omitempty" bson:"remaining,omitempty"`
+	FileHash    string `json:"filehash,omitempty" bson:"filehash,omitempty"`
+	Error       string `json:"error,omitempty" bson:"error,omitempty"`
+}
 
-// type PresensiPresensi struct {
-// 	ID          primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-// 	PhoneNumber string             `json:"phonenumber,omitempty" bson:"phonenumber,omitempty"`
-// 	Skor        float64            `json:"skor,omitempty" bson:"skor,omitempty"`
-// 	KetJam      string             `json:"ketjam,omitempty" bson:"ketjam,omitempty"`
-// 	LamaDetik   float64            `json:"lamadetik,omitempty" bson:"lamadetik,omitempty"`
-// 	Lokasi      string             `json:"lokasi,omitempty" bson:"lokasi,omitempty"`
-// }
+type PresensiSMA struct {
+	ID          primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	PhoneNumber string             `json:"phonenumber,omitempty" bson:"phonenumber,omitempty"`
+	Skor        float64            `json:"skor,omitempty" bson:"skor,omitempty"`
+	KetJam      string             `json:"ketjam,omitempty" bson:"ketjam,omitempty"`
+	LamaDetik   float64            `json:"lamadetik,omitempty" bson:"lamadetik,omitempty"`
+	Lokasi      string             `json:"lokasi,omitempty" bson:"lokasi,omitempty"`
+}
