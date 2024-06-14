@@ -4,7 +4,9 @@ import "github.com/whatsauth/itmodel"
 
 // Pdm generates a reply string based on the provided IteungMessage.
 func Pdm(Pesan itmodel.IteungMessage) (reply string) {
-	return `Nomor Induk Mahasiswa: Kartu Tanda Mahasiswa, Ijazah dan Transkrip Nilai (Apabila Mahasiswa sudah lulus), Kartu Hasil Studi
+	return `hai berikut adalah persayaratan pdm pokok :
+	
+omor Induk Mahasiswa: Kartu Tanda Mahasiswa, Ijazah dan Transkrip Nilai (Apabila Mahasiswa sudah lulus), Kartu Hasil Studi
 
 Nama Mahasiswa: Akte Kelahiran atau Surat Kenal Lahir atau Kartu Keluarga atau Ijazah, Kartu Tanda Mahasiswa, Ijazah dan Transkrip Nilai (Apabila Mahasiswa sudah lulus)
 

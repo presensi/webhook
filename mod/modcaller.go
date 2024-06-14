@@ -6,6 +6,7 @@ import (
 	"github.com/gocroot/mod/lldikti"
 	"github.com/gocroot/mod/panduan"
 	"github.com/gocroot/mod/pdm"
+	"github.com/gocroot/mod/pdmk"
 
 	"github.com/whatsauth/itmodel"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -25,6 +26,9 @@ func Caller(Modulename string, Pesan itmodel.IteungMessage, db *mongo.Database) 
 		reply = panduan.Panduan(Pesan)
 	case "pdm":
 		reply = pdm.Pdm(Pesan)
+	case "pdmk":
+		reply = pdmk.Pdmk(Pesan)
+
 	}
 	return
 }
