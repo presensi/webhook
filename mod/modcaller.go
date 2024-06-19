@@ -4,6 +4,7 @@ import (
 	"github.com/gocroot/mod/idgrup"
 	"github.com/gocroot/mod/idname"
 	"github.com/gocroot/mod/lldikti"
+	"github.com/gocroot/mod/nidn"
 	"github.com/gocroot/mod/panduan"
 	"github.com/gocroot/mod/pdm"
 	"github.com/gocroot/mod/pdmk"
@@ -28,6 +29,8 @@ func Caller(Modulename string, Pesan itmodel.IteungMessage, db *mongo.Database) 
 		reply = pdm.Pdm(Pesan)
 	case "pdmk":
 		reply = pdmk.Pdmk(Pesan)
+	case "nidn":
+		reply = nidn.Nidn(Pesan)
 
 	}
 	return
