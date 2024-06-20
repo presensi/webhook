@@ -31,22 +31,22 @@ type PresensiLokasi struct {
 	CreatedAt   time.Time          `bson:"createdAt"`
 }
 
-type PresensiSelfie struct {
-	ID          primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-	IDUser      string             `json:"iduser,omitempty" bson:"iduser,omitempty"`
-	CekInLokasi PresensiLokasi     `json:"cekinlokasi,omitempty" bson:"cekinlokasi,omitempty"`
-	IsMasuk     bool               `json:"ismasuk,omitempty" bson:"ismasuk,omitempty"`
-	Commit      string             `json:"commit,omitempty" bson:"commit,omitempty"`
-	Remaining   int                `json:"remaining,omitempty" bson:"remaining,omitempty"`
-	Filehash    string             `json:"filehash,omitempty" bson:"filehash,omitempty"`
-}
+// type PresensiSelfie struct {
+// 	ID          primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+// 	IDUser      string             `json:"iduser,omitempty" bson:"iduser,omitempty"`
+// 	CekInLokasi PresensiLokasi     `json:"cekinlokasi,omitempty" bson:"cekinlokasi,omitempty"`
+// 	IsMasuk     bool               `json:"ismasuk,omitempty" bson:"ismasuk,omitempty"`
+// 	Commit      string             `json:"commit,omitempty" bson:"commit,omitempty"`
+// 	Remaining   int                `json:"remaining,omitempty" bson:"remaining,omitempty"`
+// 	Filehash    string             `json:"filehash,omitempty" bson:"filehash,omitempty"`
+// }
 
-type FaceDetect struct {
-	IDUser    string `json:"iduser,omitempty" bson:"iduser,omitempty"`
-	IDFile    string `json:"idfile,omitempty" bson:"idfile,omitempty"`
-	Nfaces    int    `json:"nfaces,omitempty" bson:"nfaces,omitempty"`
-	Base64Str string `json:"base64str,omitempty" bson:"base64str,omitempty"`
-}
+// type FaceDetect struct {
+// 	IDUser    string `json:"iduser,omitempty" bson:"iduser,omitempty"`
+// 	IDFile    string `json:"idfile,omitempty" bson:"idfile,omitempty"`
+// 	Nfaces    int    `json:"nfaces,omitempty" bson:"nfaces,omitempty"`
+// 	Base64Str string `json:"base64str,omitempty" bson:"base64str,omitempty"`
+// }
 
 type Config struct {
 	PhoneNumber          string `json:"phonenumber,omitempty" bson:"phonenumber,omitempty"`
