@@ -75,52 +75,52 @@ func IDNamePulang(Pesan itmodel.IteungMessage, db *mongo.Database) (reply string
 	return "Hai.. hai.. kakak atas nama:\n" + Pesan.Alias_name + "\nLongitude: " + longitude + "\nLatitude: " + latitude + "\nLokasi: " + lokasiuser.Nama + "\nTelah berhasil melakukan absensi keluar\nTerimakasih"
 }
 
-func CekSelfieMasuk(Profile itmodel.Profile, Pesan itmodel.IteungMessage, db *mongo.Database) (reply string) {
-	if Pesan.Filedata == "" {
-		return "Kirim pap nya dulu dong kak.. " + Pesan.Alias_name
-	}
-	dt := FaceDetect{
-		IDUser:    Pesan.Phone_number,
-		Base64Str: Pesan.Filedata,
-	}
-	filter := bson.M{"_id": atdb.TodayFilter(), "phonenumber": Pesan.Phone_number, "ismasuk": true}
-	pstoday, err := atdb.GetOneDoc[PresensiLokasi](db, "presensi", filter)
-	if err != nil {
-		return "Wah kak " + Pesan.Alias_name + " mohon maaf kakak belum cekin share live location hari ini, silahkan share live loc dengan ditambah keyword\n*cekin presensi masuk*\n_" + err.Error() + "_"
-	}
-	conf, err := atdb.GetOneDoc[Config](db, "config", bson.M{"phonenumber": Profile.Phonenumber})
-	if err != nil {
-		return "Wah kak " + Pesan.Alias_name + " mohon maaf ada kesalahan dalam pengambilan config di database " + err.Error()
-	}
-	statuscode, faceinfo, err := atapi.PostStructWithToken[FaceInfo]("secret", conf.LeaflySecret, dt, conf.LeaflyURL)
-	if err != nil {
-		return "Wah kak " + Pesan.Alias_name + " mohon maaf ada kesalahan pemanggilan API leafly :" + err.Error()
-	}
-	if statuscode != http.StatusOK {
-		if statuscode == http.StatusFailedDependency {
-			return "Wah kak " + Pesan.Alias_name + " mohon maaf, jangan kaku gitu dong. Ekspresi wajahnya ga boleh sama dengan selfie sebelumnya ya kak. Senyumnya yang lebar, giginya dilihatin, matanya pelototin, hidungnya keatasin.\n\n" + faceinfo.Error
-		} else if statuscode == http.StatusMultipleChoices {
-			return "IM$G#M$Gui76557u|||" + faceinfo.FileHash + "|||" + faceinfo.Error
-		} else {
-			return "Wah kak " + Pesan.Alias_name + " mohon maaf:\n" + faceinfo.Error + "\nCode: " + strconv.Itoa(statuscode)
-		}
+// func CekSelfieMasuk(Profile itmodel.Profile, Pesan itmodel.IteungMessage, db *mongo.Database) (reply string) {
+// 	if Pesan.Filedata == "" {
+// 		return "Kirim pap nya dulu dong kak.. " + Pesan.Alias_name
+// 	}
+// 	dt := FaceDetect{
+// 		IDUser:    Pesan.Phone_number,
+// 		Base64Str: Pesan.Filedata,
+// 	}
+// 	filter := bson.M{"_id": atdb.TodayFilter(), "phonenumber": Pesan.Phone_number, "ismasuk": true}
+// 	pstoday, err := atdb.GetOneDoc[PresensiLokasi](db, "presensi", filter)
+// 	if err != nil {
+// 		return "Wah kak " + Pesan.Alias_name + " mohon maaf kakak belum cekin share live location hari ini, silahkan share live loc dengan ditambah keyword\n*cekin presensi masuk*\n_" + err.Error() + "_"
+// 	}
+// 	conf, err := atdb.GetOneDoc[Config](db, "config", bson.M{"phonenumber": Profile.Phonenumber})
+// 	if err != nil {
+// 		return "Wah kak " + Pesan.Alias_name + " mohon maaf ada kesalahan dalam pengambilan config di database " + err.Error()
+// 	}
+// 	statuscode, faceinfo, err := atapi.PostStructWithToken[FaceInfo]("secret", conf.LeaflySecret, dt, conf.LeaflyURL)
+// 	if err != nil {
+// 		return "Wah kak " + Pesan.Alias_name + " mohon maaf ada kesalahan pemanggilan API leafly :" + err.Error()
+// 	}
+// 	if statuscode != http.StatusOK {
+// 		if statuscode == http.StatusFailedDependency {
+// 			return "Wah kak " + Pesan.Alias_name + " mohon maaf, jangan kaku gitu dong. Ekspresi wajahnya ga boleh sama dengan selfie sebelumnya ya kak. Senyumnya yang lebar, giginya dilihatin, matanya pelototin, hidungnya keatasin.\n\n" + faceinfo.Error
+// 		} else if statuscode == http.StatusMultipleChoices {
+// 			return "IM$G#M$Gui76557u|||" + faceinfo.FileHash + "|||" + faceinfo.Error
+// 		} else {
+// 			return "Wah kak " + Pesan.Alias_name + " mohon maaf:\n" + faceinfo.Error + "\nCode: " + strconv.Itoa(statuscode)
+// 		}
 
-	}
-	pselfie := PresensiSelfie{
-		CekInLokasi: pstoday,
-		IsMasuk:     true,
-		IDUser:      faceinfo.PhoneNumber,
-		Commit:      faceinfo.Commit,
-		Filehash:    faceinfo.FileHash,
-		Remaining:   faceinfo.Remaining,
-	}
-	_, err = atdb.InsertOneDoc(db, "selfie", pselfie)
-	if err != nil {
-		return "Wah kak " + Pesan.Alias_name + " mohon maaf ada kesalahan input ke database " + err.Error()
-	}
-	return "Hai kak, " + Pesan.Alias_name + "\nCekin Masuk di lokasi:" + pstoday.Lokasi.Nama + "\n*Jangan lupa _cekin presensi pulang_ ya kak biar dapat skor*"
+// 	}
+// 	pselfie := PresensiSelfie{
+// 		CekInLokasi: pstoday,
+// 		IsMasuk:     true,
+// 		IDUser:      faceinfo.PhoneNumber,
+// 		Commit:      faceinfo.Commit,
+// 		Filehash:    faceinfo.FileHash,
+// 		Remaining:   faceinfo.Remaining,
+// 	}
+// 	_, err = atdb.InsertOneDoc(db, "selfie", pselfie)
+// 	if err != nil {
+// 		return "Wah kak " + Pesan.Alias_name + " mohon maaf ada kesalahan input ke database " + err.Error()
+// 	}
+// 	return "Hai kak, " + Pesan.Alias_name + "\nCekin Masuk di lokasi:" + pstoday.Lokasi.Nama + "\n*Jangan lupa _cekin presensi pulang_ ya kak biar dapat skor*"
 
-}
+// }
 
 
 func CekSelfiePulang(Pesan itmodel.IteungMessage, db *mongo.Database) (reply string) {
