@@ -3,6 +3,7 @@ package mod
 import (
 	"github.com/gocroot/mod/idgrup"
 	"github.com/gocroot/mod/idname"
+	"github.com/gocroot/mod/ijazah"
 	"github.com/gocroot/mod/lldikti"
 	"github.com/gocroot/mod/nidn"
 	"github.com/gocroot/mod/panduan"
@@ -31,6 +32,8 @@ func Caller(Modulename string, Pesan itmodel.IteungMessage, db *mongo.Database) 
 		reply = pdmk.Pdmk(Pesan)
 	case "nidn":
 		reply = nidn.Nidn(Pesan)
+	case "ijazah":
+		reply = ijazah.Ijazah(Pesan)
 
 	}
 	return
