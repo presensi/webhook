@@ -5,6 +5,7 @@ import (
 	"github.com/gocroot/mod/idname"
 	"github.com/gocroot/mod/ijazah"
 	"github.com/gocroot/mod/lldikti"
+	"github.com/gocroot/mod/mutasi"
 	"github.com/gocroot/mod/nidn"
 	"github.com/gocroot/mod/panduan"
 	"github.com/gocroot/mod/pdm"
@@ -37,6 +38,8 @@ func Caller(Modulename string, Pesan itmodel.IteungMessage, db *mongo.Database) 
 		reply = ijazah.Ijazah(Pesan)
 	case "pengaduan":
 		reply = pengaduan.Pengaduan(Pesan)
+	case "mutasi":
+		reply = mutasi.Mutasi(Pesan)
 
 	}
 	return
