@@ -123,87 +123,87 @@ func IDNamePulang(Pesan itmodel.IteungMessage, db *mongo.Database) (reply string
 // }
 
 
-func CekSelfiePulang(Pesan itmodel.IteungMessage, db *mongo.Database) (reply string) {
-	if Pesan.Filedata == "" {
-		return "Kirim pap nya dulu dong kak.. " + Pesan.Alias_name
-	}
-	dt := FaceDetect{
-		IDUser:    Pesan.Phone_number,
-		Base64Str: Pesan.Filedata,
-	}
-	filter := bson.M{"_id": atdb.TodayFilter(), "phonenumber": Pesan.Phone_number} //, "ismasuk": false}
-	pstoday, err := atdb.GetOneDoc[PresensiLokasi](db, "presensi", filter)
-	if err != nil {
-		return "Wah kak " + Pesan.Alias_name + " mohon maaf kakak belum cekin share live location hari ini " + err.Error()
-	}
-	conf, err := atdb.GetOneDoc[Config](db, "config", bson.M{"phonenumber": "62895601060000"})
-	if err != nil {
-		return "Wah kak " + Pesan.Alias_name + " mohon maaf ada kesalahan dalam pengambilan config di database " + err.Error()
-	}
-	statuscode, faceinfo, err := atapi.PostStructWithToken[FaceInfo]("secret", conf.LeaflySecret, dt, conf.LeaflyURL)
-	if err != nil {
-		return "Wah kak " + Pesan.Alias_name + " mohon maaf ada kesalahan pemanggilan API leafly " + err.Error()
-	}
-	if statuscode != http.StatusOK {
-		if statuscode == http.StatusFailedDependency {
-			return "Wah kak " + Pesan.Alias_name + " mohon maaf, jangan kaku gitu dong. Ekspresi wajahnya ga boleh sama dengan selfie sebelumnya ya kak. Senyumnya yang lebar, giginya dilihatin, matanya pelototin, hidungnya keatasin.\n\n" + faceinfo.Error
-		} else if statuscode == http.StatusMultipleChoices {
-			return "IM$G#M$Gui76557u|||" + faceinfo.FileHash + "|||" + faceinfo.Error
-		} else {
-			return "Wah kak " + Pesan.Alias_name + " mohon maaf:\n" + faceinfo.Error + "\nCode: " + strconv.Itoa(statuscode)
-		}
+// func CekSelfiePulang(Pesan itmodel.IteungMessage, db *mongo.Database) (reply string) {
+// 	if Pesan.Filedata == "" {
+// 		return "Kirim pap nya dulu dong kak.. " + Pesan.Alias_name
+// 	}
+// 	dt := FaceDetect{
+// 		IDUser:    Pesan.Phone_number,
+// 		Base64Str: Pesan.Filedata,
+// 	}
+// 	filter := bson.M{"_id": atdb.TodayFilter(), "phonenumber": Pesan.Phone_number} //, "ismasuk": false}
+// 	pstoday, err := atdb.GetOneDoc[PresensiLokasi](db, "presensi", filter)
+// 	if err != nil {
+// 		return "Wah kak " + Pesan.Alias_name + " mohon maaf kakak belum cekin share live location hari ini " + err.Error()
+// 	}
+// 	conf, err := atdb.GetOneDoc[Config](db, "config", bson.M{"phonenumber": "62895601060000"})
+// 	if err != nil {
+// 		return "Wah kak " + Pesan.Alias_name + " mohon maaf ada kesalahan dalam pengambilan config di database " + err.Error()
+// 	}
+// 	statuscode, faceinfo, err := atapi.PostStructWithToken[FaceInfo]("secret", conf.LeaflySecret, dt, conf.LeaflyURL)
+// 	if err != nil {
+// 		return "Wah kak " + Pesan.Alias_name + " mohon maaf ada kesalahan pemanggilan API leafly " + err.Error()
+// 	}
+// 	if statuscode != http.StatusOK {
+// 		if statuscode == http.StatusFailedDependency {
+// 			return "Wah kak " + Pesan.Alias_name + " mohon maaf, jangan kaku gitu dong. Ekspresi wajahnya ga boleh sama dengan selfie sebelumnya ya kak. Senyumnya yang lebar, giginya dilihatin, matanya pelototin, hidungnya keatasin.\n\n" + faceinfo.Error
+// 		} else if statuscode == http.StatusMultipleChoices {
+// 			return "IM$G#M$Gui76557u|||" + faceinfo.FileHash + "|||" + faceinfo.Error
+// 		} else {
+// 			return "Wah kak " + Pesan.Alias_name + " mohon maaf:\n" + faceinfo.Error + "\nCode: " + strconv.Itoa(statuscode)
+// 		}
 
-	}
-	pselfie := PresensiSelfie{
-		CekInLokasi: pstoday,
-		IsMasuk:     false,
-		IDUser:      faceinfo.PhoneNumber,
-		Commit:      faceinfo.Commit,
-		Filehash:    faceinfo.FileHash,
-		Remaining:   faceinfo.Remaining,
-	}
-	_, err = atdb.InsertOneDoc(db, "selfie", pselfie)
-	if err != nil {
-		return "Wah kak " + Pesan.Alias_name + " mohon maaf ada kesalahan input ke database " + err.Error()
-	}
-	filter = bson.M{"_id": atdb.TodayFilter(), "cekinlokasi.phonenumber": Pesan.Phone_number, "ismasuk": true}
-	selfiemasuk, err := atdb.GetOneLatestDoc[PresensiSelfie](db, "selfie", filter)
-	if err != nil {
-		return "Wah kak " + Pesan.Alias_name + " mohon maaf kakak belum selfie masuk. " + err.Error()
-	}
-	// Ekstrak timestamp dari ObjectID
-	objectIDTimestamp := selfiemasuk.ID.Timestamp()
-	// Dapatkan waktu saat ini
-	currentTime := time.Now()
-	// Hitung selisih waktu dalam detik
-	diff := currentTime.Sub(objectIDTimestamp) //.Seconds()
-	// Konversi selisih waktu ke jam, menit, dan detik
-	hours := int(diff.Hours())
-	minutes := int(diff.Minutes()) % 60
-	seconds := int(diff.Seconds()) % 60
-	KetJam := fmt.Sprintf("%d jam, %d menit, %d detik", hours, minutes, seconds)
+// 	}
+// 	pselfie := PresensiSelfie{
+// 		CekInLokasi: pstoday,
+// 		IsMasuk:     false,
+// 		IDUser:      faceinfo.PhoneNumber,
+// 		Commit:      faceinfo.Commit,
+// 		Filehash:    faceinfo.FileHash,
+// 		Remaining:   faceinfo.Remaining,
+// 	}
+// 	_, err = atdb.InsertOneDoc(db, "selfie", pselfie)
+// 	if err != nil {
+// 		return "Wah kak " + Pesan.Alias_name + " mohon maaf ada kesalahan input ke database " + err.Error()
+// 	}
+// 	filter = bson.M{"_id": atdb.TodayFilter(), "cekinlokasi.phonenumber": Pesan.Phone_number, "ismasuk": true}
+// 	selfiemasuk, err := atdb.GetOneLatestDoc[PresensiSelfie](db, "selfie", filter)
+// 	if err != nil {
+// 		return "Wah kak " + Pesan.Alias_name + " mohon maaf kakak belum selfie masuk. " + err.Error()
+// 	}
+// 	// Ekstrak timestamp dari ObjectID
+// 	objectIDTimestamp := selfiemasuk.ID.Timestamp()
+// 	// Dapatkan waktu saat ini
+// 	currentTime := time.Now()
+// 	// Hitung selisih waktu dalam detik
+// 	diff := currentTime.Sub(objectIDTimestamp) //.Seconds()
+// 	// Konversi selisih waktu ke jam, menit, dan detik
+// 	hours := int(diff.Hours())
+// 	minutes := int(diff.Minutes()) % 60
+// 	seconds := int(diff.Seconds()) % 60
+// 	KetJam := fmt.Sprintf("%d jam, %d menit, %d detik", hours, minutes, seconds)
 
-	skor := diff.Seconds() / 18000 //selisih waktu dibagi 8 jam
-	skorValue := fmt.Sprintf("%f", skor)
-	//post ke backedn domyikado
-	datapresensi := PresensiSMA{
-		ID:          selfiemasuk.ID,
-		PhoneNumber: Pesan.Phone_number,
-		Skor:        skor,
-		KetJam:      KetJam,
-		LamaDetik:   diff.Seconds(),
-		Lokasi:      pstoday.Lokasi.Nama,
-	}
-	statuscode, httpresp, err := atapi.PostStructWithToken[itmodel.Response]("secret", conf.DomyikadoSecret, datapresensi, conf.DomyikadoPresensiURL)
-	if err != nil {
-		return "Akses ke endpoint domyikado gagal: " + err.Error()
-	}
-	if statuscode != http.StatusOK {
-		return "Salah posting endpoint domyikado: " + httpresp.Response + "\ninfo\n" + httpresp.Info
-	}
-	return "Hai kak, " + Pesan.Alias_name + "\nBerhasil Presensi Pulang di lokasi:" + pstoday.Lokasi.Nama + "\nHadir selama: " + KetJam + "\n*Skor: " + skorValue + "*"
+// 	skor := diff.Seconds() / 18000 //selisih waktu dibagi 8 jam
+// 	skorValue := fmt.Sprintf("%f", skor)
+// 	//post ke backedn domyikado
+// 	datapresensi := PresensiSMA{
+// 		ID:          selfiemasuk.ID,
+// 		PhoneNumber: Pesan.Phone_number,
+// 		Skor:        skor,
+// 		KetJam:      KetJam,
+// 		LamaDetik:   diff.Seconds(),
+// 		Lokasi:      pstoday.Lokasi.Nama,
+// 	}
+// 	statuscode, httpresp, err := atapi.PostStructWithToken[itmodel.Response]("secret", conf.DomyikadoSecret, datapresensi, conf.DomyikadoPresensiURL)
+// 	if err != nil {
+// 		return "Akses ke endpoint domyikado gagal: " + err.Error()
+// 	}
+// 	if statuscode != http.StatusOK {
+// 		return "Salah posting endpoint domyikado: " + httpresp.Response + "\ninfo\n" + httpresp.Info
+// 	}
+// 	return "Hai kak, " + Pesan.Alias_name + "\nBerhasil Presensi Pulang di lokasi:" + pstoday.Lokasi.Nama + "\nHadir selama: " + KetJam + "\n*Skor: " + skorValue + "*"
 
-}
+// }
 
 func GetLokasi(mongoconn *mongo.Database, long float64, lat float64) (lokasi Lokasi, err error) {
 	filter := bson.M{
