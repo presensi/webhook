@@ -9,6 +9,7 @@ import (
 	"github.com/gocroot/mod/panduan"
 	"github.com/gocroot/mod/pdm"
 	"github.com/gocroot/mod/pdmk"
+	"github.com/gocroot/mod/pengaduan"
 
 	"github.com/whatsauth/itmodel"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -34,6 +35,8 @@ func Caller(Modulename string, Pesan itmodel.IteungMessage, db *mongo.Database) 
 		reply = nidn.Nidn(Pesan)
 	case "ijazah":
 		reply = ijazah.Ijazah(Pesan)
+	case "pengaduan":
+		reply = pengaduan.Pengaduan(Pesan)
 
 	}
 	return
