@@ -4,6 +4,7 @@ import "net/http"
 
 var Origins = []string{
 	"https://presensi.github.io/",
+	"http://127.0.0.1:5501",
 }
 
 var Headers = []string{
