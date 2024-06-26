@@ -26,10 +26,14 @@ func URL(w http.ResponseWriter, r *http.Request) {
 		controller.NotFound(w, r)
 	}
 
+	if config.SetAccessControlHeaders(w, r) {
+		return // Jika ini adalah permintaan preflight, kembalikan segera.
+	}
 	switch {
 	case method == "POST" && path == "/data/adminregister":
 		controller.RegisterHandler(w, r)
 	case method == "POST" && path == "/data/user":
 		controller.GetUser(w, r)
 	}
+	config.SetEnv()	
 }
