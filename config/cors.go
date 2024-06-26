@@ -3,16 +3,6 @@ package config
 import "net/http"
 
 var Origins = []string{
-	"https://naskah.bukupedia.co.id",
-	"https://auth.ulbi.ac.id",
-	"https://sip.ulbi.ac.id",
-	"https://euis.ulbi.ac.id",
-	"https://home.ulbi.ac.id",
-	"https://alpha.ulbi.ac.id",
-	"https://dias.ulbi.ac.id",
-	"https://iteung.ulbi.ac.id",
-	"https://whatsauth.github.io",
-	"https://pmb.ulbi.ac.id",
 	"https://presensi.github.io/",
 }
 
@@ -48,7 +38,7 @@ func SetAccessControlHeaders(w http.ResponseWriter, r *http.Request) bool {
 		if r.Method == http.MethodOptions {
 			w.Header().Set("Access-Control-Allow-Credentials", "true")
 			w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Login")
-			w.Header().Set("Access-Control-Allow-Methods", "POST,GET")
+			w.Header().Set("Access-Control-Allow-Methods", "POST,GET,OPTIONS")
 			w.Header().Set("Access-Control-Allow-Origin", origin)
 			w.Header().Set("Access-Control-Max-Age", "3600")
 			w.WriteHeader(http.StatusNoContent)
