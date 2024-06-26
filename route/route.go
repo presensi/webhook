@@ -25,4 +25,11 @@ func URL(w http.ResponseWriter, r *http.Request) {
 	default:
 		controller.NotFound(w, r)
 	}
+
+	switch {
+	case method == "POST" && path == "/data/adminregister":
+		controller.RegisterHandler(w, r)
+	case method == "POST" && path == "/data/user":
+		controller.GetUser(w, r)
+	}
 }
