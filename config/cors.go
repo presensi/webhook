@@ -1,23 +1,19 @@
 package config
 
-import "net/http"
+import (
+	"net/http"
+)
 
+// Daftar origins yang diizinkan
 var Origins = []string{
-	"https://presensi.github.io/",
-	"http://127.0.0.1:5501",
-}
-
-var Headers = []string{
-	"Origin",
-	"Content-Type",
-	"Accept",
-	"Authorization",
-	"Access-Control-Request-Headers",
-	"Token",
-	"Login",
-	"Access-Control-Allow-Origin",
-	"Bearer",
-	"X-Requested-With",
+	"https://naskah.bukupedia.co.id",
+	"https://chatgpl.do.my.id",
+	"https://do.my.id",
+	"https://in.my.id",
+	"https://my.my.id",
+	"https://whatsauth.github.io",
+	"https://www.do.my.id",
+	"https://presensi.github.io",
 }
 
 // Fungsi untuk memeriksa apakah origin diizinkan
@@ -39,8 +35,8 @@ func SetAccessControlHeaders(w http.ResponseWriter, r *http.Request) bool {
 		if r.Method == http.MethodOptions {
 			w.Header().Set("Access-Control-Allow-Credentials", "true")
 			w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Login")
-			w.Header().Set("Access-Control-Allow-Methods", "POST,GET,OPTIONS")
-			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "POST,GET,DELETE,PUT")
+			w.Header().Set("Access-Control-Allow-Origin", origin)
 			w.Header().Set("Access-Control-Max-Age", "3600")
 			w.WriteHeader(http.StatusNoContent)
 			return true

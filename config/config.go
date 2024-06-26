@@ -8,6 +8,8 @@ import (
 
 var IPPort, Net = helper.GetAddress()
 
+var PhoneNumber string
+
 func SetEnv() {
 	if ErrorMongoconn != nil {
 		log.Println(ErrorMongoconn.Error())
