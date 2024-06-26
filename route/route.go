@@ -9,10 +9,17 @@ import (
 	"github.com/gocroot/helper"
 )
 
+// URL mengarahkan permintaan HTTP masuk ke fungsi controller yang tepat.
 func URL(w http.ResponseWriter, r *http.Request) {
+	if config.SetAccessControlHeaders(w, r) {
+		return // Jika ini adalah permintaan preflight, kembalikan segera.
+	}
+
 	if config.ErrorMongoconn != nil {
 		log.Println(config.ErrorMongoconn.Error())
 	}
+
+	config.SetEnv()
 
 	var method, path string = r.Method, r.URL.Path
 	switch {
@@ -20,20 +27,13 @@ func URL(w http.ResponseWriter, r *http.Request) {
 		controller.GetHome(w, r)
 	case method == "GET" && path == "/refresh/token":
 		controller.GetNewToken(w, r)
+	case method == "POST" && path == "/data/adminregister":
+		controller.RegisterHandler(w, r)
+	case method == "POST" && path == "/data/user":
+		controller.GetUser(w, r)
 	case method == "POST" && helper.URLParam(path, "/webhook/nomor/:nomorwa"):
 		controller.PostInboxNomor(w, r)
 	default:
 		controller.NotFound(w, r)
 	}
-
-	if config.SetAccessControlHeaders(w, r) {
-		return // Jika ini adalah permintaan preflight, kembalikan segera.
-	}
-	switch {
-	case method == "POST" && path == "/data/adminregister":
-		controller.RegisterHandler(w, r)
-	case method == "POST" && path == "/data/user":
-		controller.GetUser(w, r)
-	}
-	config.SetEnv()	
 }
