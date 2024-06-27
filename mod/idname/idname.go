@@ -37,6 +37,19 @@ func IDNameMasuk(Pesan itmodel.IteungMessage, db *mongo.Database) (reply string)
 	if lokasiuser.Nama == "" {
 		return "Nama nya kosong kak " + Pesan.Alias_name
 	}
+		// Ambil waktu saat ini
+		now := time.Now()
+
+		// Tentukan batas waktu validasi (dari jam 6.30 pagi hingga jam 7.30 pagi)
+		startTime := time.Date(now.Year(), now.Month(), now.Day(), 6, 30, 0, 0, now.Location())
+		endTime := time.Date(now.Year(), now.Month(), now.Day(), 7, 30, 0, 0, now.Location())
+	
+		// Periksa apakah waktu saat ini berada di dalam rentang yang diizinkan
+		if now.Before(startTime) || now.After(endTime) {
+			// Jika di luar jam atas, maka tandai sebagai alpha atau tidak hadir
+			return "Maaf kak, Anda hanya dapat melakukan presensi antara jam 6.30 pagi hingga 7.30. Diluar waktu tersebut dianggap alpha atau tidak hadir."
+		}
+
 	dtuser := &PresensiLokasi{
 		PhoneNumber: Pesan.Phone_number,
 		Lokasi:      lokasiuser,
@@ -64,6 +77,20 @@ func IDNamePulang(Pesan itmodel.IteungMessage, db *mongo.Database) (reply string
 	if lokasiuser.Nama == "" {
 		return "Nama nya kosong kak " + Pesan.Alias_name
 	}
+
+			// Ambil waktu saat ini
+			now := time.Now()
+
+			// Tentukan batas waktu validasi (dari jam 2 sore hingga jam 6 sore)
+			startTime := time.Date(now.Year(), now.Month(), now.Day(), 14, 30, 0, 0, now.Location())
+			endTime := time.Date(now.Year(), now.Month(), now.Day(), 18, 0, 0, 0, now.Location())
+		
+			// Periksa apakah waktu saat ini berada di dalam rentang yang diizinkan
+			if now.Before(startTime) || now.After(endTime) {
+				// Jika di luar jam atas, maka tandai sebagai alpha atau tidak hadir
+				return "Maaf kak, Anda hanya dapat melakukan presensi antara jam 6.30 pagi hingga 7.30. Diluar waktu tersebut dianggap alpha atau tidak hadir."
+			}
+
 	dtuser := &PresensiLokasi{
 		PhoneNumber: Pesan.Phone_number,
 		Lokasi:      lokasiuser,
