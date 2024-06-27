@@ -15,3 +15,10 @@ type User struct {
 	Email    string             `json:"email" bson:"email" validate:"required,email"`
 	Password string             `json:"password" bson:"password" validate:"required,min=8"`
 }
+
+// Siswa represents the data structure for a student
+type Siswa struct {
+    Nama  string `json:"nama" bson:"nama"`
+    Kelas string `json:"kelas" bson:"kelas"`
+    Umur  int    `json:"umur" bson:"umur"`
+}

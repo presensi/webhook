@@ -1,8 +1,10 @@
 package controller
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/gocroot/config"
 	"github.com/gocroot/helper"
@@ -64,4 +66,55 @@ func GetUser(respw http.ResponseWriter, req *http.Request) {
 	}
 
 	helper.WriteJSON(respw, http.StatusOK, user)
+}
+
+// AddSiswa inserts a new student record in the database
+func AddSiswa(siswa Siswa) error {
+	_, err := siswaCollection.InsertOne(context.Background(), siswa)
+	return err
+}
+
+// UpdateSiswa updates an existing student record in the database
+func UpdateSiswa(nama string, siswa Siswa) error {
+	filter := bson.M{"nama": nama}
+	update := bson.M{
+		"$set": siswa,
+	}
+	_, err := siswaCollection.UpdateOne(context.Background(), filter, update)
+	return err
+}
+
+// DeleteSiswa deletes a student record from the database
+func DeleteSiswa(nama string) error {
+	filter := bson.M{"nama": nama}
+	_, err := siswaCollection.DeleteOne(context.Background(), filter)
+	return err
+}
+
+// GetAllSiswa retrieves all student records from the database
+func GetAllSiswa() ([]Siswa, error) {
+	var siswaList []Siswa
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	cursor, err := siswaCollection.Find(ctx, bson.M{})
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	for cursor.Next(ctx) {
+		var siswa Siswa
+		err := cursor.Decode(&siswa)
+		if err != nil {
+			return nil, err
+		}
+		siswaList = append(siswaList, siswa)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return siswaList, nil
 }
