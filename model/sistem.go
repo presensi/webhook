@@ -18,14 +18,8 @@ type User struct {
 
 // Siswa represents the data structure for a student
 type Siswa struct {
-	Nama  string `json:"nama" bson:"nama"`
-	Kelas string `json:"kelas" bson:"kelas"`
-	Umur  int    `json:"umur" bson:"umur"`
-}
-
-type Kehadiran struct {
-    Date    string `json:"date" bson:"date"`
-    Name    string `json:"name" bson:"name"`
-    Subject string `json:"subject" bson:"subject"`
-    Status  string `json:"status" bson:"status"`
+	PhoneNumber string		`bson:"phonenumber,omitempty"`
+	Nama  string 			`json:"nama" bson:"nama"`
+	Kelas string 			`json:"kelas" bson:"kelas"`
+	Umur  int    			`json:"umur" bson:"umur"`
 }

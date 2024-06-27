@@ -35,8 +35,6 @@ func URL(w http.ResponseWriter, r *http.Request) {
 		controller.GetUser(w, r)
 	case method == "GET" && path == "/data/siswa":
 		controller.GetSiswa(w, r)
-	case method == "GET" && path == "/data/kehadiran":
-        controller.GetKehadiran(w, r)
 	default:
 		controller.NotFound(w, r)
 	}
