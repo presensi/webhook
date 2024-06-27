@@ -16,14 +16,22 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func Caller(Modulename string, Pesan itmodel.IteungMessage, db *mongo.Database) (reply string) {
+func Caller(Modulename string, Pesan itmodel.IteungMessage, db *mongo.Database, Profile itmodel.Profile) (reply string) {
 	switch Modulename {
 	case "idgrup":
 		reply = idgrup.IDGroup(Pesan)
 	case "idname-masuk":
-		reply = idname.IDNameMasuk(Pesan, db)
+		reply = idname.CekSelfieMasuk(Profile, Pesan, db)
 	case "idname-pulang":
-		reply = idname.IDNamePulang(Pesan, db)
+		reply = idname.CekSelfiePulang(Pesan, db)
+	case "selfie-masuk":
+		// Misalkan Profile diperlukan di sini, pastikan diinisialisasikan terlebih dahulu
+		// Contoh: reply = idname.CekSelfieMasuk(Profile, Pesan, db)
+		reply = "selfie-masuk belum diimplementasikan"
+	case "selfie-pulang":
+		// Misalkan Profile diperlukan di sini, pastikan diinisialisasikan terlebih dahulu
+		// Contoh: reply = idname.CekSelfiePulang(Pesan, db)
+		reply = "selfie-pulang belum diimplementasikan"
 	case "lldikti":
 		reply = lldikti.Lldikti(Pesan)
 	case "panduan":
@@ -42,7 +50,6 @@ func Caller(Modulename string, Pesan itmodel.IteungMessage, db *mongo.Database) 
 		reply = mutasi.Mutasi(Pesan)
 	case "pendirian":
 		reply = pendirian.Pendirian(Pesan)
-
 	}
 	return
 }
