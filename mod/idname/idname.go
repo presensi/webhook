@@ -166,7 +166,7 @@ func IDNameMasuk(Pesan itmodel.IteungMessage, db *mongo.Database) (reply string)
 		return "Gagal insert ke database kak " + Pesan.Alias_name
 	}
 
-	return "Hai.. hai.. kakak atas nama:\n" + Pesan.Alias_name + "\nLongitude: " + longitude + "\nLatitude: " + latitude + "\nLokasi:" + lokasiuser.Nama + "\nsilahkan dilanjutkan dengan selfie di lokasi ya maximal 5 menit setelah share live location, jangan lupa ditambah keyword\n*myika selfie presensi masuk*"
+	return "Hai.. hai.. kakak atas nama:\n" + Pesan.Alias_name + "\nLongitude: " + longitude + "\nLatitude: " + latitude + "\nLokasi:" + lokasiuser.Nama + "\nsilahkan dilanjutkan dengan selfie di lokasi ya maximal 5 menit setelah share live location, jangan lupa ditambah keyword\n*teung selfie presensi masuk*"
 }
 
 func IDNamePulang(Pesan itmodel.IteungMessage, db *mongo.Database) (reply string) {
@@ -201,7 +201,7 @@ func IDNamePulang(Pesan itmodel.IteungMessage, db *mongo.Database) (reply string
 		return "Gagal insert ke database kak " + Pesan.Alias_name
 	}
 
-	return "Hai.. hai.. kakak atas nama:\n" + Pesan.Alias_name + "\nLongitude: " + longitude + "\nLatitude: " + latitude + "\nLokasi:" + lokasiuser.Nama + "\nsilahkan dilanjutkan dengan selfie di lokasi ya maximal 5 menit setelah share live location, jangan lupa ditambah keyword\n*myika selfie presensi pulang*"
+	return "Hai.. hai.. kakak atas nama:\n" + Pesan.Alias_name + "\nLongitude: " + longitude + "\nLatitude: " + latitude + "\nLokasi:" + lokasiuser.Nama + "\nsilahkan dilanjutkan dengan selfie di lokasi ya maximal 5 menit setelah share live location, jangan lupa ditambah keyword\n*teung selfie presensi pulang*"
 }
 
 func GetLokasi(mongoconn *mongo.Database, long float64, lat float64) (lokasi Lokasi, err error) {
