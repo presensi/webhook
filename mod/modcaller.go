@@ -20,18 +20,14 @@ func Caller(Modulename string, Pesan itmodel.IteungMessage, db *mongo.Database, 
 	switch Modulename {
 	case "idgrup":
 		reply = idgrup.IDGroup(Pesan)
-	case "idname-masuk":
-		reply = idname.CekSelfieMasuk(Profile, Pesan, db)
-	case "idname-pulang":
-		reply = idname.CekSelfiePulang(Pesan, db)
+	case "presensi-masuk":
+		reply = idname.IDNameMasuk(Pesan, db)
+	case "presensi-pulang":
+		reply = idname.IDNamePulang(Pesan, db)
 	case "selfie-masuk":
-		// Misalkan Profile diperlukan di sini, pastikan diinisialisasikan terlebih dahulu
-		// Contoh: reply = idname.CekSelfieMasuk(Profile, Pesan, db)
-		reply = "selfie-masuk belum diimplementasikan"
+		reply = idname.CekSelfieMasuk(Profile, Pesan, db)
 	case "selfie-pulang":
-		// Misalkan Profile diperlukan di sini, pastikan diinisialisasikan terlebih dahulu
-		// Contoh: reply = idname.CekSelfiePulang(Pesan, db)
-		reply = "selfie-pulang belum diimplementasikan"
+		reply = idname.CekSelfiePulang(Pesan, db)
 	case "lldikti":
 		reply = lldikti.Lldikti(Pesan)
 	case "panduan":
