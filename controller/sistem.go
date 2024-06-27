@@ -1,10 +1,8 @@
 package controller
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
-	"time"
 
 	"github.com/gocroot/config"
 	"github.com/gocroot/helper"
@@ -73,52 +71,88 @@ func GetUser(respw http.ResponseWriter, req *http.Request) {
 // DATA SISWA
 
 // AddSiswa inserts a new student record in the database
-func AddSiswa(siswa Siswa) error {
-	_, err := siswaCollection.InsertOne(context.Background(), siswa)
-	return err
+func AddSiswa(w http.ResponseWriter, r *http.Request) {
+	var siswa model.Siswa
+	if err := json.NewDecoder(r.Body).Decode(&siswa); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	insertedID, err := atdb.InsertOneDoc(config.Mongoconn, "siswa", siswa)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	response := map[string]interface{}{"message": "Data siswa berhasil disimpan", "insertedID": insertedID}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
 }
 
 // UpdateSiswa updates an existing student record in the database
-func UpdateSiswa(nama string, siswa Siswa) error {
-	filter := bson.M{"nama": nama}
-	update := bson.M{
-		"$set": siswa,
+func UpdateSiswa(w http.ResponseWriter, r *http.Request) {
+	var siswa model.Siswa
+	if err := json.NewDecoder(r.Body).Decode(&siswa); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
-	_, err := siswaCollection.UpdateOne(context.Background(), filter, update)
-	return err
+
+	filter := bson.M{"nama": siswa.Nama}
+	update := bson.M{"$set": siswa}
+
+	updateresult, err := atdb.UpdateOneDoc(config.Mongoconn, "siswa", filter, update)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	response := map[string]interface{}{"message": "Data siswa berhasil diperbarui", "updatedCount": updateresult.ModifiedCount}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
 }
 
 // DeleteSiswa deletes a student record from the database
-func DeleteSiswa(nama string) error {
-	filter := bson.M{"nama": nama}
-	_, err := siswaCollection.DeleteOne(context.Background(), filter)
-	return err
+func DeleteSiswa(w http.ResponseWriter, r *http.Request) {
+    var siswa model.Siswa
+    if err := json.NewDecoder(r.Body).Decode(&siswa); err != nil {
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+
+    filter := bson.M{"nama": siswa.Nama}
+
+    // Memanggil fungsi DeleteOneDoc untuk menghapus dokumen dari koleksi 'siswa'
+    updateresult, err := atdb.DeleteOneDoc(config.Mongoconn, "siswa", filter)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    response := map[string]interface{}{"message": "Data siswa berhasil dihapus", "deletedCount": updateresult.DeletedCount}
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
 }
 
+
 // GetAllSiswa retrieves all student records from the database
-func GetAllSiswa() ([]Siswa, error) {
-	var siswaList []Siswa
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
+func GetAllSiswa(w http.ResponseWriter, r *http.Request) {
+    var siswaList []model.Siswa
 
-	cursor, err := siswaCollection.Find(ctx, bson.M{})
-	if err != nil {
-		return nil, err
-	}
-	defer cursor.Close(ctx)
+    // Mengambil semua dokumen dari koleksi 'siswa'
+    results, err := atdb.GetAllDoc[[]model.Siswa](config.Mongoconn, "siswa", bson.M{})
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
 
-	for cursor.Next(ctx) {
-		var siswa Siswa
-		err := cursor.Decode(&siswa)
-		if err != nil {
-			return nil, err
-		}
-		siswaList = append(siswaList, siswa)
-	}
+    // Mengubah hasil BSON ke dalam struktur model.Siswa
+    for _, result := range results {
+        var siswa model.Siswa
+        bsonBytes, _ := bson.Marshal(result)
+        bson.Unmarshal(bsonBytes, &siswa)
+        siswaList = append(siswaList, siswa)
+    }
 
-	if err := cursor.Err(); err != nil {
-		return nil, err
-	}
-
-	return siswaList, nil
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode([]model.Siswa(siswaList))
 }
