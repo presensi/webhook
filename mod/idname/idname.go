@@ -14,16 +14,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// func IDName(Pesan itmodel.IteungMessage, db *mongo.Database) (reply string) {
-// 	if !Pesan.LiveLoc {
-// 		return "Minimal share live location dulu lah kak."
-// 	}
-// 	longitude := fmt.Sprintf("%f", Pesan.Longitude)
-// 	latitude := fmt.Sprintf("%f", Pesan.Latitude)
-
-// 	return "Hai.. hai.. kakak atas nama:\n" + Pesan.Alias_name + "\nLongitude: " + longitude + "\nLatitude: " + latitude + "\nLokasi:" + GetLokasi(db, Pesan.Longitude, Pesan.Latitude) + "\nTelah berhasil melakukan absen\nTerimakasih"
-// }
-
 func IDNameMasuk(Pesan itmodel.IteungMessage, db *mongo.Database) (reply string) {
 	if !Pesan.LiveLoc {
 		return "Minimal share live location dulu lah kak " + Pesan.Alias_name
