@@ -20,9 +20,9 @@ func Caller(Modulename string, Pesan itmodel.IteungMessage, db *mongo.Database, 
 	switch Modulename {
 	case "idgrup":
 		reply = idgrup.IDGroup(Pesan)
-	case "presensi-masuk":
+	case "idname-masuk":
 		reply = idname.IDNameMasuk(Pesan, db)
-	case "presensi-pulang":
+	case "idname-pulang":
 		reply = idname.IDNamePulang(Pesan, db)
 	case "selfie-masuk":
 		reply = idname.CekSelfieMasuk(Profile, Pesan, db)
