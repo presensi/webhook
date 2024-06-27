@@ -5,6 +5,16 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
+type Profile struct {
+    Token       string `bson:"token"`
+    Phonenumber string `bson:"phonenumber"`
+    Secret      string `bson:"secret"`
+    URL         string `bson:"url"`
+    URLAPIText  string `bson:"urlapitext"`
+    QRKeyword   string `bson:"qrkeyword"`
+    Botname     string `bson:"botname"`
+    Triggerword string `bson:"triggerword"`
+}
 
 type Lokasi struct { //lokasi yang bisa melakukan presensi
 	ID       primitive.ObjectID `bson:"_id,omitempty"`
@@ -18,10 +28,6 @@ type Geometry struct { //data geometry untuk lokasi presensi
 	Coordinates interface{} `json:"coordinates" bson:"coordinates"`
 }
 
-type DataPresensi struct {
-	Lokasi string `bson:"lokasi"`
-}
-
 type PresensiLokasi struct {
 	ID          primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	PhoneNumber string             `bson:"phonenumber,omitempty"`
@@ -31,22 +37,22 @@ type PresensiLokasi struct {
 	CreatedAt   time.Time          `bson:"createdAt"`
 }
 
-// type PresensiSelfie struct {
-// 	ID          primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-// 	IDUser      string             `json:"iduser,omitempty" bson:"iduser,omitempty"`
-// 	CekInLokasi PresensiLokasi     `json:"cekinlokasi,omitempty" bson:"cekinlokasi,omitempty"`
-// 	IsMasuk     bool               `json:"ismasuk,omitempty" bson:"ismasuk,omitempty"`
-// 	Commit      string             `json:"commit,omitempty" bson:"commit,omitempty"`
-// 	Remaining   int                `json:"remaining,omitempty" bson:"remaining,omitempty"`
-// 	Filehash    string             `json:"filehash,omitempty" bson:"filehash,omitempty"`
-// }
+type PresensiSelfie struct {
+	ID          primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	IDUser      string             `json:"iduser,omitempty" bson:"iduser,omitempty"`
+	CekInLokasi PresensiLokasi     `json:"cekinlokasi,omitempty" bson:"cekinlokasi,omitempty"`
+	IsMasuk     bool               `json:"ismasuk,omitempty" bson:"ismasuk,omitempty"`
+	Commit      string             `json:"commit,omitempty" bson:"commit,omitempty"`
+	Remaining   int                `json:"remaining,omitempty" bson:"remaining,omitempty"`
+	Filehash    string             `json:"filehash,omitempty" bson:"filehash,omitempty"`
+}
 
-// type FaceDetect struct {
-// 	IDUser    string `json:"iduser,omitempty" bson:"iduser,omitempty"`
-// 	IDFile    string `json:"idfile,omitempty" bson:"idfile,omitempty"`
-// 	Nfaces    int    `json:"nfaces,omitempty" bson:"nfaces,omitempty"`
-// 	Base64Str string `json:"base64str,omitempty" bson:"base64str,omitempty"`
-// }
+type FaceDetect struct {
+	IDUser    string `json:"iduser,omitempty" bson:"iduser,omitempty"`
+	IDFile    string `json:"idfile,omitempty" bson:"idfile,omitempty"`
+	Nfaces    int    `json:"nfaces,omitempty" bson:"nfaces,omitempty"`
+	Base64Str string `json:"base64str,omitempty" bson:"base64str,omitempty"`
+}
 
 type Config struct {
 	PhoneNumber          string `json:"phonenumber,omitempty" bson:"phonenumber,omitempty"`
