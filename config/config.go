@@ -21,3 +21,7 @@ func SetEnv() {
 	// 	PublicKeyWhatsAuth = profile.PublicKey
 	// 	WAAPIToken = profile.Token
 }
+
+func GetDokumen() *string {
+	return &DOKUMENPANDUAN
+}
