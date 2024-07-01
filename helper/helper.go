@@ -57,6 +57,7 @@ func GetIPaddress() string {
 	}
 	return string(body)
 }
+
 func DownloadFileBase64(url string) (string, error) {
 	resp, err := http.Get(url)
 	if err != nil {
