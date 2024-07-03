@@ -2,6 +2,7 @@ package dokumen
 
 import (
 	"fmt"
+
 	h "github.com/gocroot/config/helper"
 	"github.com/gocroot/helper/atapi"
 	"github.com/whatsauth/itmodel"
@@ -24,7 +25,7 @@ func PanduanPDDIKTI(Pesan itmodel.IteungMessage) (reply string) {
 		Caption:   "Ini Dokumennya yaa...",
 	}
 	profile, _ := h.GetAppProfile(Pesan.Phone_number, h.GetMongo())
-	_, _, err := atapi.PostStructWithToken[itmodel.Response]("Token", profile.Token, data, "https://wa.my.id/send/message/document")
+	_, _, err := atapi.PostStructWithToken[itmodel.Response]("Token", profile.Token, data, "https://api.wa.my.id/api/send/message/document")
 	if err != nil {
 		return fmt.Sprintf("Gagal mengirim dokumen: %v", err)
 	}
