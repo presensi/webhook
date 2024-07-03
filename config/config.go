@@ -2,11 +2,11 @@ package config
 
 import (
 	"log"
-
-	"github.com/gocroot/helper"
+	"os"
+	"strings"
 )
 
-var IPPort, Net = helper.GetAddress()
+var IPPort, Net = GetAddress()
 
 var PhoneNumber string
 
@@ -22,6 +22,23 @@ func SetEnv() {
 	// 	WAAPIToken = profile.Token
 }
 
-func GetDokumen() *string {
-	return &DOKUMENPANDUAN
+func GetAddress() (ipport string, network string) {
+	port := os.Getenv("PORT")
+	network = "tcp4"
+	if port == "" {
+		port = ":8080"
+	} else if port[0:1] != ":" {
+		ip := os.Getenv("IP")
+		if ip == "" {
+			ipport = ":" + port
+		} else {
+			if strings.Contains(ip, ".") {
+				ipport = ip + ":" + port
+			} else {
+				ipport = "[" + ip + "]" + ":" + port
+				network = "tcp6"
+			}
+		}
+	}
+	return
 }

@@ -1,9 +1,9 @@
 package config
 
 import (
+	"github.com/gocroot/helper/atdb"
 	"os"
 
-	"github.com/gocroot/helper"
 	"github.com/gocroot/model"
 )
 
@@ -14,4 +14,4 @@ var mongoinfo = model.DBInfo{
 	DBName:   "webhook",
 }
 
-var Mongoconn, ErrorMongoconn = helper.MongoConnect(mongoinfo)
+var Mongoconn, ErrorMongoconn = atdb.MongoConnect(atdb.DBInfo(mongoinfo))

@@ -2,10 +2,8 @@ package dokumen
 
 import (
 	"fmt"
-
-	"github.com/gocroot/helper"
-
-	"github.com/gocroot/config"
+	h "github.com/gocroot/config/helper"
+	"github.com/gocroot/helper/atapi"
 	"github.com/whatsauth/itmodel"
 )
 
@@ -20,13 +18,13 @@ type DocumentMessage struct {
 func PanduanPDDIKTI(Pesan itmodel.IteungMessage) (reply string) {
 	data := DocumentMessage{
 		To:        Pesan.Phone_number,
-		Base64Doc: config.GetDokumen(),
+		Base64Doc: h.GetDokumen(),
 		Filename:  "Panduan PDDIKTI Admin.pdf",
 		Isgroup:   false,
 		Caption:   "Ini Dokumennya yaa...",
 	}
-	profile, _ := helper.GetAppProfile(Pesan.Phone_number, config.Mongoconn)
-	_, err := helper.PostStructWithToken[itmodel.Response]("Token", profile.Token, data, "https://wa.my.id/send/message/document")
+	profile, _ := h.GetAppProfile(Pesan.Phone_number, h.GetMongo())
+	_, _, err := atapi.PostStructWithToken[itmodel.Response]("Token", profile.Token, data, "https://wa.my.id/send/message/document")
 	if err != nil {
 		return fmt.Sprintf("Gagal mengirim dokumen: %v", err)
 	}

@@ -1,6 +1,7 @@
 package mod
 
 import (
+	"github.com/gocroot/mod/dokumen"
 	"github.com/gocroot/mod/idgrup"
 	"github.com/gocroot/mod/idname"
 	"github.com/gocroot/mod/ijazah"
@@ -46,6 +47,8 @@ func Caller(Modulename string, Pesan itmodel.IteungMessage, db *mongo.Database, 
 		reply = mutasi.Mutasi(Pesan)
 	case "pendirian":
 		reply = pendirian.Pendirian(Pesan)
+	case "dokumen":
+		reply = dokumen.PanduanPDDIKTI(Pesan)
 	}
 	return
 }

@@ -1,11 +1,9 @@
 package helper
 
 import (
-	"encoding/base64"
 	"io"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -17,27 +15,6 @@ func URLParam(reqpath string, url string) bool {
 
 func GetParam(r *http.Request) string {
 	return r.URL.Path[strings.LastIndex(r.URL.Path, "/")+1:]
-}
-
-func GetAddress() (ipport string, network string) {
-	port := os.Getenv("PORT")
-	network = "tcp4"
-	if port == "" {
-		port = ":8080"
-	} else if port[0:1] != ":" {
-		ip := os.Getenv("IP")
-		if ip == "" {
-			ipport = ":" + port
-		} else {
-			if strings.Contains(ip, ".") {
-				ipport = ip + ":" + port
-			} else {
-				ipport = "[" + ip + "]" + ":" + port
-				network = "tcp6"
-			}
-		}
-	}
-	return
 }
 
 func GetIPaddress() string {
@@ -56,19 +33,4 @@ func GetIPaddress() string {
 		log.Fatal(err)
 	}
 	return string(body)
-}
-
-func DownloadFileBase64(url string) (string, error) {
-	resp, err := http.Get(url)
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-
-	data, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return "", err
-	}
-	base64String := base64.StdEncoding.EncodeToString(data)
-	return base64String, nil
 }
