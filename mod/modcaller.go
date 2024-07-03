@@ -25,10 +25,10 @@ func Caller(Modulename string, Pesan itmodel.IteungMessage, db *mongo.Database, 
 		reply = idname.IDNameMasuk(Pesan, db)
 	case "idname-pulang":
 		reply = idname.IDNamePulang(Pesan, db)
-	case "selfie-masuk":
-		reply = idname.CekSelfieMasuk(Profile, Pesan, db)
-	case "selfie-pulang":
-		reply = idname.CekSelfiePulang(Pesan, db)
+	// case "selfie-masuk":
+	// 	reply = idname.CekSelfieMasuk(Profile, Pesan, db)
+	// case "selfie-pulang":
+	// 	reply = idname.CekSelfiePulang(Pesan, db)
 	case "lldikti":
 		reply = lldikti.Lldikti(Pesan)
 	case "panduan":
