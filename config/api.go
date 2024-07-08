@@ -14,4 +14,4 @@ var PublicKeyWhatsAuth string
 
 var WAAPIToken string
 
-var DOKUMENPANDUAN, ErrDokumen = file.DownloadFileBase64("https://github.com/haryadi14/jurnal_peningkatan-/blob/master/panduan.pdf")
+var DOKUMENPANDUAN, ErrDokumen = file.DownloadFileBase64("https://raw.githubusercontent.com/haryadi14/jurnal_peningkatan-/master/panduan.pdf")
