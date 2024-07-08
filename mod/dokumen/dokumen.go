@@ -20,7 +20,7 @@ func PanduanPDDIKTI(Pesan itmodel.IteungMessage) (reply string) {
 	data := DocumentMessage{
 		To:        Pesan.Phone_number,
 		Base64Doc: h.GetDokumen(),
-		Filename:  "Panduan PDDIKTI Admin.pdf",
+		Filename:  "panduan.pdf",
 		Isgroup:   false,
 		Caption:   "Ini Dokumennya yaa...",
 	}
