@@ -5,6 +5,7 @@ import (
 	"github.com/gocroot/mod/idgrup"
 	"github.com/gocroot/mod/idname"
 	"github.com/gocroot/mod/ijazah"
+	"github.com/gocroot/mod/keyword"
 	"github.com/gocroot/mod/lldikti"
 	"github.com/gocroot/mod/mutasi"
 	"github.com/gocroot/mod/nidn"
@@ -13,7 +14,6 @@ import (
 	"github.com/gocroot/mod/pdmk"
 	"github.com/gocroot/mod/pendirian"
 	"github.com/gocroot/mod/pengaduan"
-
 	"github.com/whatsauth/itmodel"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -51,7 +51,7 @@ func Caller(Modulename string, Pesan itmodel.IteungMessage, db *mongo.Database, 
 	case "dokumen":
 		reply = dokumen.PanduanPDDIKTI(Pesan)
 	case "keyword":
-		reply = dokumen.Keyword(Pesan)
+		reply = keyword.Keyword(Pesan)
 	}
 	return
 }
