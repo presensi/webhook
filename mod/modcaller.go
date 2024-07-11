@@ -13,6 +13,7 @@ import (
 	"github.com/gocroot/mod/pdmk"
 	"github.com/gocroot/mod/pendirian"
 	"github.com/gocroot/mod/pengaduan"
+
 	"github.com/whatsauth/itmodel"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -49,6 +50,8 @@ func Caller(Modulename string, Pesan itmodel.IteungMessage, db *mongo.Database, 
 		reply = pendirian.Pendirian(Pesan)
 	case "dokumen":
 		reply = dokumen.PanduanPDDIKTI(Pesan)
+	case "keyword":
+		reply = dokumen.Keyword(Pesan)
 	}
 	return
 }
