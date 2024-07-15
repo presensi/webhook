@@ -14,4 +14,6 @@ var PublicKeyWhatsAuth string
 
 var WAAPIToken string
 
-var DOKUMENPANDUAN, ErrDokumen = file.DownloadFileBase64("https://raw.githubusercontent.com/haryadi14/jurnal_peningkatan-/master/panduan_compressed.pdf")
+var DOKUMENPANDUAN, ErrDokumenPanduan = file.DownloadFileBase64("https://raw.githubusercontent.com/haryadi14/jurnal_peningkatan-/master/panduan_compressed.pdf")
+
+var PDMK, ErrDokumenPDMK = file.DownloadFileBase64("https://raw.githubusercontent.com/haryadi14/jurnal_peningkatan-/master/Prosedur_pdmk.pdf")
