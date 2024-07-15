@@ -143,6 +143,13 @@ import (
 // }
 
 func IDNameMasuk(Pesan itmodel.IteungMessage, db *mongo.Database) (reply string) {
+		// Check if the current time is within the allowed time range
+		startTime, _ := time.Parse("15:04", "06:00")
+		endTime, _ := time.Parse("15:04", "7:30")
+		currentTime := time.Now()
+		if currentTime.Before(startTime) || currentTime.After(endTime) {
+			return "Presensi masuk hanya dapat dilakukan antara pukul 06:00 hingga 7:30 saja kakak!"
+		}
 	if !Pesan.LiveLoc {
 		return "Minimal share live location dulu lah kak " + Pesan.Alias_name
 	}
@@ -171,6 +178,13 @@ func IDNameMasuk(Pesan itmodel.IteungMessage, db *mongo.Database) (reply string)
 }
 
 func IDNamePulang(Pesan itmodel.IteungMessage, db *mongo.Database) (reply string) {
+	// Check if the current time is within the allowed time range
+	startTime, _ := time.Parse("15:04", "14:30")
+	endTime, _ := time.Parse("15:04", "18:00")
+	currentTime := time.Now()
+	if currentTime.Before(startTime) || currentTime.After(endTime) {
+		return "Presensi pulang hanya dapat dilakukan antara pukul 14:30 hingga 18:00 saja kakak!"
+	}
 	if !Pesan.LiveLoc {
 		return "Minimal share live location dulu lah kak " + Pesan.Alias_name
 	}
