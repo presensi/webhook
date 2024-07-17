@@ -11,6 +11,9 @@ import (
 func GetDokumen() *string {
 	return &config.DOKUMENPANDUAN
 }
+func GetPdmk() *string {
+	return &config.PDMK
+}
 
 func GetMongo() *mongo.Database {
 	return config.Mongoconn
