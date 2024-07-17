@@ -3,10 +3,6 @@ package model
 import (
 	// "time"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/bson"
-	// "go.mongodb.org/mongo-driver/bson/primitive"
-	"context"
 )
 
 // Untuk Login
@@ -39,37 +35,4 @@ type Kehadiran struct {
 	Name      string             `bson:"name"`
 	Subject   string             `bson:"subject"`
 	Status    string             `bson:"status"`
-}
-
-func AddKehadiran(db *mongo.Database, kehadiran Kehadiran) error {
-	_, err := db.Collection("kehadiran").InsertOne(context.TODO(), kehadiran)
-	return err
-}
-
-func GetAllKehadiran(db *mongo.Database) ([]Kehadiran, error) {
-	var kehadiran []Kehadiran
-	cursor, err := db.Collection("kehadiran").Find(context.TODO(), bson.M{})
-	if err != nil {
-		return nil, err
-	}
-	err = cursor.All(context.TODO(), &kehadiran)
-	return kehadiran, err
-}
-
-func UpdateKehadiran(db *mongo.Database, kehadiran Kehadiran) error {
-	_, err := db.Collection("kehadiran").UpdateOne(context.TODO(), bson.M{
-		"date": kehadiran.Date,
-		"name": kehadiran.Name,
-		"subject": kehadiran.Subject,
-	}, bson.M{"$set": kehadiran})
-	return err
-}
-
-func DeleteKehadiran(db *mongo.Database, date string, name string, subject string) error {
-	_, err := db.Collection("kehadiran").DeleteOne(context.TODO(), bson.M{
-		"date": date,
-		"name": name,
-		"subject": subject,
-	})
-	return err
 }
