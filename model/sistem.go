@@ -18,8 +18,8 @@ type User struct {
 
 // Siswa represents the data structure for a student
 type Siswa struct {
-	PhoneNumber string		`bson:"phonenumber,omitempty"`
-	Nama  string 			`json:"nama" bson:"nama"`
-	Kelas string 			`json:"kelas" bson:"kelas"`
-	Umur  int    			`json:"umur" bson:"umur"`
+    ID    primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
+    Nama  string             `bson:"nama" json:"nama"`
+    Kelas string             `bson:"kelas" json:"kelas"`
+    Umur  int                `bson:"umur" json:"umur"`
 }
