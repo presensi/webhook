@@ -33,6 +33,12 @@ func URL(w http.ResponseWriter, r *http.Request) {
 		controller.RegisterHandler(w, r)
 	case method == "POST" && path == "/data/user":
 		controller.GetUser(w, r)
+	case method == "POST" && path == "/data/siswa":
+		controller.AddSiswa(w, r)
+	case method == "PUT" && path == "/data/siswa":
+		controller.UpdateSiswa(w, r)
+	case method == "DELETE" && path == "/data/siswa":
+		controller.DeleteSiswa(w, r)
 	case method == "GET" && path == "/data/siswa":
 		controller.GetAllSiswa(w, r)
 	default:
