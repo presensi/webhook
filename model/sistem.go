@@ -2,6 +2,7 @@ package model
 
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
+// Untuk Login
 type AdminRegistration struct {
 	ID              primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
 	Fullname        string             `json:"fullname" bson:"fullname" validate:"required"`
@@ -16,7 +17,7 @@ type User struct {
 	Password string             `json:"password" bson:"password" validate:"required,min=8"`
 }
 
-// Siswa represents the data structure for a student
+// Untuk Data Siswa
 type Siswa struct {
     ID    primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
     Nama  string             `bson:"nama" json:"nama"`
