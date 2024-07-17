@@ -133,7 +133,6 @@ func DeleteSiswa(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(response)
 }
 
-
 // GetAllSiswa retrieves all student records from the database
 func GetAllSiswa(w http.ResponseWriter, r *http.Request) {
     var siswaList []model.Siswa
@@ -154,5 +153,5 @@ func GetAllSiswa(w http.ResponseWriter, r *http.Request) {
     }
 
     w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode([]model.Siswa(siswaList))
+    json.NewEncoder(w).Encode(siswaList)
 }
