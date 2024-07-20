@@ -7,8 +7,10 @@ import (
 	"github.com/gocroot/config"
 	"github.com/gocroot/helper"
 	"github.com/gocroot/helper/atdb"
+	"github.com/gocroot/mod/idname"
 	"github.com/gocroot/model"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	// "go.mongodb.org/mongo-driver/bson/primitive"
 	// "go.mongodb.org/mongo-driver/mongo"
 )
@@ -256,4 +258,25 @@ func DeleteKehadiran(w http.ResponseWriter, r *http.Request) {
 	response := map[string]interface{}{"message": "Catatan kehadiran berhasil dihapus", "deletedCount": deleteresult.DeletedCount}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
+}
+
+// PRESENSI
+
+func GetAllPresensi(w http.ResponseWriter, r *http.Request) {
+	collection := config.Mongoconn.Collection("presensi")
+	cur, err := collection.Find(r.Context(), bson.M{}, options.Find().SetSort(bson.D{{Key: "createdAt", Value: -1}}))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer cur.Close(r.Context())
+
+	var presensiList []idname.PresensiLokasi
+	if err = cur.All(r.Context(), &presensiList); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(presensiList)
 }

@@ -49,6 +49,8 @@ func URL(w http.ResponseWriter, r *http.Request) {
 		controller.UpdateKehadiran(w, r)
 	case method == "DELETE" && path == "/data/kehadiran":
 		controller.DeleteKehadiran(w, r)
+	case method == "GET" && path == "/data/presensi":
+		controller.GetAllPresensi(w, r)	
 	default:
 		controller.NotFound(w, r)
 	}
