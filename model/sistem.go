@@ -28,12 +28,3 @@ type Siswa struct {
     Umur  int                `bson:"umur" json:"umur"`
 	Phonenumber string 		 `bson:"phonenumber" json:"phonenumber"`
 }
-
-// Untuk Kehadrian
-type Kehadiran struct {
-	ID        primitive.ObjectID `bson:"_id,omitempty"`
-	Date      string             `bson:"date"`
-	Name      string             `bson:"name"`
-	Subject   string             `bson:"subject"`
-	Status    string             `bson:"status"`
-}

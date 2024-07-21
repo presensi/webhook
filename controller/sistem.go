@@ -11,11 +11,7 @@ import (
 	"github.com/gocroot/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	// "go.mongodb.org/mongo-driver/bson/primitive"
-	// "go.mongodb.org/mongo-driver/mongo"
 )
-
-// LOGIN
 
 // RegisterHandler menghandle permintaan registrasi admin.
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
@@ -33,13 +29,11 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Lakukan validasi dan pemrosesan data di sini
 	if registrationData.Password != registrationData.ConfirmPassword {
 		http.Error(w, "Password tidak sesuai", http.StatusBadRequest)
 		return
 	}
 
-	// Simpan data ke database atau lakukan tindakan lain yang diperlukan
 	_, err = atdb.InsertOneDoc(config.Mongoconn, "user", registrationData)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -70,9 +64,8 @@ func GetUser(respw http.ResponseWriter, req *http.Request) {
 	helper.WriteJSON(respw, http.StatusOK, user)
 }
 
-// DATA SISWA
-
-// AddSiswa inserts a new student record in the database
+//DATA SISWA
+// AddSiswa menambahkan data siswa baru ke database
 func AddSiswa(w http.ResponseWriter, r *http.Request) {
 	var siswa model.Siswa
 	if err := json.NewDecoder(r.Body).Decode(&siswa); err != nil {
@@ -91,7 +84,7 @@ func AddSiswa(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-// UpdateSiswa updates an existing student record in the database
+// UpdateSiswa memperbarui data siswa yang ada di database
 func UpdateSiswa(w http.ResponseWriter, r *http.Request) {
 	var siswa model.Siswa
 	if err := json.NewDecoder(r.Body).Decode(&siswa); err != nil {
@@ -113,53 +106,50 @@ func UpdateSiswa(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-// DeleteSiswa deletes a student record from the database
+// DeleteSiswa menghapus data siswa dari database
 func DeleteSiswa(w http.ResponseWriter, r *http.Request) {
-    var siswa model.Siswa
-    if err := json.NewDecoder(r.Body).Decode(&siswa); err != nil {
-        http.Error(w, err.Error(), http.StatusBadRequest)
-        return
-    }
+	var siswa model.Siswa
+	if err := json.NewDecoder(r.Body).Decode(&siswa); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
-    filter := bson.M{"nama": siswa.Nama}
+	filter := bson.M{"nama": siswa.Nama}
 
-    // Memanggil fungsi DeleteOneDoc untuk menghapus dokumen dari koleksi 'siswa'
-    updateresult, err := atdb.DeleteOneDoc(config.Mongoconn, "siswa", filter)
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
+	deleteresult, err := atdb.DeleteOneDoc(config.Mongoconn, "siswa", filter)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-    response := map[string]interface{}{"message": "Data siswa berhasil dihapus", "deletedCount": updateresult.DeletedCount}
-    w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode(response)
+	response := map[string]interface{}{"message": "Data siswa berhasil dihapus", "deletedCount": deleteresult.DeletedCount}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
 }
 
-// GetAllSiswa retrieves all student records from the database
+// GetAllSiswa mengambil semua data siswa dari database
 func GetAllSiswa(w http.ResponseWriter, r *http.Request) {
-    var siswaList []model.Siswa
+	var siswaList []model.Siswa
 
-    // Mengambil semua dokumen dari koleksi 'siswa'
-    results, err := atdb.GetAllDoc[[]model.Siswa](config.Mongoconn, "siswa", bson.M{})
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
+	results, err := atdb.GetAllDoc[[]model.Siswa](config.Mongoconn, "siswa", bson.M{})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-    // Mengubah hasil BSON ke dalam struktur model.Siswa
-    for _, result := range results {
-        var siswa model.Siswa
-        bsonBytes, _ := bson.Marshal(result)
-        bson.Unmarshal(bsonBytes, &siswa)
-        siswaList = append(siswaList, siswa)
-    }
+	for _, result := range results {
+		var siswa model.Siswa
+		bsonBytes, _ := bson.Marshal(result)
+		bson.Unmarshal(bsonBytes, &siswa)
+		siswaList = append(siswaList, siswa)
+	}
 
-    w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode(siswaList)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(siswaList)
 }
 
-// PRESENSI
-
+//Presemsi
+// GetAllPresensi mengambil semua data presensi dari database
 func GetAllPresensi(w http.ResponseWriter, r *http.Request) {
 	collection := config.Mongoconn.Collection("presensi")
 	cur, err := collection.Find(r.Context(), bson.M{}, options.Find().SetSort(bson.D{{Key: "createdAt", Value: -1}}))
