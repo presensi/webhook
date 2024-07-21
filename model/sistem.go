@@ -26,6 +26,7 @@ type Siswa struct {
     Nama  string             `bson:"nama" json:"nama"`
     Kelas string             `bson:"kelas" json:"kelas"`
     Umur  int                `bson:"umur" json:"umur"`
+	Phonenumber string 		 `bson:"phonenumber" json:"phonenumber"`
 }
 
 // Untuk Kehadrian
