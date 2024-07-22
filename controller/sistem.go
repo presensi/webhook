@@ -95,7 +95,7 @@ func UpdateSiswa(w http.ResponseWriter, r *http.Request) {
 	filter := bson.M{"nama": siswa.Nama}
 	update := bson.M{"$set": siswa}
 
-	updateresult, err := atdb.UpdateOneDoc(config.Mongoconn, "siswa", filter, update)
+	updateresult, err := atdb.ReplaceOneDoc(config.Mongoconn, "siswa", filter, update)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
