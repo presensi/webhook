@@ -93,7 +93,11 @@ func UpdateSiswa(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filter := bson.M{"nama": siswa.Nama}
-	update := bson.M{"$set": siswa}
+	update := bson.M{
+		"kelas":       siswa.Kelas,
+		"umur":        siswa.Umur,
+		"phonenumber": siswa.Phonenumber,
+	}
 
 	updateresult, err := atdb.UpdateOneDoc(config.Mongoconn, "siswa", filter, update)
 	if err != nil {
