@@ -94,7 +94,6 @@ func UpdateSiswa(w http.ResponseWriter, r *http.Request) {
 
 	filter := bson.M{"nama": siswa.Nama}
 	update := bson.M{
-		"nama":		   siswa.Nama,
 		"kelas":       siswa.Kelas,
 		"umur":        siswa.Umur,
 		"phonenumber": siswa.Phonenumber,
