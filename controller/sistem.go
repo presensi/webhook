@@ -92,20 +92,10 @@ func UpdateSiswa(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if siswa.ID.IsZero() {
-		http.Error(w, "Invalid student ID", http.StatusBadRequest)
-		return
-	}
+	filter := bson.M{"nama": siswa.Nama}
+	update := bson.M{"$set": siswa}
 
-	filter := bson.M{"_id": siswa.ID}
-	update := bson.M{"$set": bson.M{
-		"nama":        siswa.Nama,
-		"kelas":       siswa.Kelas,
-		"umur":        siswa.Umur,
-		"phonenumber": siswa.Phonenumber,
-	}}
-
-	updateresult, err := atdb.ReplaceOneDoc(config.Mongoconn, "siswa", filter, update)
+	updateresult, err := atdb.UpdateOneDoc(config.Mongoconn, "siswa", filter, update)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
