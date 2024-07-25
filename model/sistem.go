@@ -31,9 +31,9 @@ type Siswa struct {
 
 // Untuk Kehadrian
 type Kehadiran struct {
-	ID        primitive.ObjectID `bson:"_id,omitempty"`
-	Date      string             `bson:"date"`
-	Name      string             `bson:"name"`
-	Subject   string             `bson:"subject"`
-	Status    string             `bson:"status"`
+	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	Date      string             `json:"date" bson:"date"`
+	Name      string             `json:"name" bson:"name"`
+	Subject   string             `json:"subject" bson:"subject"`
+	Status    string             `json:"status" bson:"status"`
 }

@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/gocroot/config"
@@ -11,7 +10,6 @@ import (
 	"github.com/gocroot/mod/idname"
 	"github.com/gocroot/model"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -176,43 +174,61 @@ func GetAllPresensi(w http.ResponseWriter, r *http.Request) {
 }
 
 //Presensi Manual
-// AddKehadiran adds a new attendance record to the database
+// AddKehadiran menambahkan catatan kehadiran baru
 func AddKehadiran(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	if r.Method != http.MethodPost {
+		http.Error(w, "Metode tidak diizinkan", http.StatusMethodNotAllowed)
+		return
+	}
 
 	var kehadiran model.Kehadiran
 	if err := json.NewDecoder(r.Body).Decode(&kehadiran); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	kehadiran.ID = primitive.NewObjectID()
 
-	insertedID, err := atdb.InsertOneDoc(config.Mongoconn, "kehadiran", kehadiran)
+	_, err := atdb.InsertOneDoc(config.Mongoconn, "kehadiran", kehadiran)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	response := map[string]interface{}{"message": "Kehadiran berhasil ditambahkan", "insertedID": insertedID}
+	response := map[string]string{"message": "Catatan kehadiran berhasil ditambahkan"}
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
 
-// GetAllKehadiran retrieves all attendance records from the database
+// GetAllKehadiran mendapatkan semua catatan kehadiran
 func GetAllKehadiran(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	if r.Method != http.MethodGet {
+		http.Error(w, "Metode tidak diizinkan", http.StatusMethodNotAllowed)
+		return
+	}
 
-	kehadiranList, err := atdb.GetAllDoc[[]model.Kehadiran](config.Mongoconn, "kehadiran", bson.M{})
+	var kehadiranList []model.Kehadiran
+	results, err := atdb.GetAllDoc[[]model.Kehadiran](config.Mongoconn, "kehadiran", bson.M{})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	for _, result := range results {
+		var kehadiran model.Kehadiran
+		bsonBytes, _ := bson.Marshal(result)
+		bson.Unmarshal(bsonBytes, &kehadiran)
+		kehadiranList = append(kehadiranList, kehadiran)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(kehadiranList)
 }
 
-// UpdateKehadiran updates an existing attendance record in the database
+// UpdateKehadiran mengupdate catatan kehadiran
 func UpdateKehadiran(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	if r.Method != http.MethodPut {
+		http.Error(w, "Metode tidak diizinkan", http.StatusMethodNotAllowed)
+		return
+	}
 
 	var kehadiran model.Kehadiran
 	if err := json.NewDecoder(r.Body).Decode(&kehadiran); err != nil {
@@ -220,46 +236,40 @@ func UpdateKehadiran(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := kehadiran.ID.Hex()
-	objectID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		http.Error(w, "Invalid ID", http.StatusBadRequest)
-		return
-	}
+	filter := bson.M{"date": kehadiran.Date, "name": kehadiran.Name, "subject": kehadiran.Subject}
+	update := bson.M{"$set": kehadiran}
 
-	updateFields := bson.M{
-		"date":    kehadiran.Date,
-		"name":    kehadiran.Name,
-		"subject": kehadiran.Subject,
-		"status":  kehadiran.Status,
-	}
-	updateResult, err := atdb.UpdateOneDoc(config.Mongoconn, "kehadiran", bson.M{"_id": objectID}, updateFields)
+	updateresult, err := atdb.UpdateOneDoc(config.Mongoconn, "kehadiran", filter, update)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	response := map[string]interface{}{"message": "Kehadiran berhasil diperbarui", "updatedCount": updateResult.ModifiedCount}
+	response := map[string]interface{}{"message": "Catatan kehadiran berhasil diperbarui", "updatedCount": updateresult.ModifiedCount}
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
 
-// DeleteKehadiran deletes an attendance record from the database
+// DeleteKehadiran menghapus catatan kehadiran
 func DeleteKehadiran(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	id := r.URL.Query().Get("id")
-	objectID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		http.Error(w, "Invalid ID", http.StatusBadRequest)
+	if r.Method != http.MethodDelete {
+		http.Error(w, "Metode tidak diizinkan", http.StatusMethodNotAllowed)
 		return
 	}
 
-	deleteResult, err := atdb.DeleteOneDoc(config.Mongoconn, "kehadiran", bson.M{"_id": objectID})
+	date := r.URL.Query().Get("date")
+	name := r.URL.Query().Get("name")
+	subject := r.URL.Query().Get("subject")
+
+	filter := bson.M{"date": date, "name": name, "subject": subject}
+
+	deleteresult, err := atdb.DeleteOneDoc(config.Mongoconn, "kehadiran", filter)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	response := map[string]interface{}{"message": fmt.Sprintf("Document with ID %s deleted", id), "deletedCount": deleteResult.DeletedCount}
+	response := map[string]interface{}{"message": "Catatan kehadiran berhasil dihapus", "deletedCount": deleteresult.DeletedCount}
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
