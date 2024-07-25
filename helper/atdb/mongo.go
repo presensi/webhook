@@ -106,18 +106,18 @@ func GetRandomDoc[T any](db *mongo.Database, collection string, size uint) (resu
 	return
 }
 
-func GetAllDoc[T any](db *mongo.Database, collection string, filter bson.M) (docs []T, err error) {
+func GetAllDoc[T any](db *mongo.Database, collection string, filter bson.M) (doc T, err error) {
 	ctx := context.Background()
 	cur, err := db.Collection(collection).Find(ctx, filter)
 	if err != nil {
-		return nil, err
+		return
 	}
 	defer cur.Close(ctx)
-	err = cur.All(ctx, &docs)
+	err = cur.All(ctx, &doc)
 	if err != nil {
-		return nil, err
+		return
 	}
-	return docs, nil
+	return
 }
 
 func GetOneDoc[T any](db *mongo.Database, collection string, filter bson.M) (doc T, err error) {
