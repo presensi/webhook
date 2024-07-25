@@ -173,7 +173,7 @@ func GetAllPresensi(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(presensiList)
 }
 
-//Presensi Manual
+// Presensi Manual
 // AddKehadiran menambahkan catatan kehadiran baru
 func AddKehadiran(w http.ResponseWriter, r *http.Request) {
     var kehadiran model.Kehadiran
@@ -195,67 +195,69 @@ func AddKehadiran(w http.ResponseWriter, r *http.Request) {
 
 // UpdateKehadiran mengupdate catatan kehadiran
 func UpdateKehadiran(w http.ResponseWriter, r *http.Request) {
-	var kehadiran model.Kehadiran
-	if err := json.NewDecoder(r.Body).Decode(&kehadiran); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+    var kehadiran model.Kehadiran
+    if err := json.NewDecoder(r.Body).Decode(&kehadiran); err != nil {
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
 
-	filter := bson.M{"name": kehadiran.Name}
-	update := bson.M{
-		"subject": kehadiran.Subject,
-		"status" : kehadiran.Status,
-	}
+    // Use ID as the unique identifier for updating
+    filter := bson.M{"_id": kehadiran.ID}
+    update := bson.M{
+        "date":    kehadiran.Date,
+        "subject": kehadiran.Subject,
+        "status":  kehadiran.Status,
+    }
 
-	updateresult, err := atdb.UpdateOneDoc(config.Mongoconn, "kehadiran", filter, update)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+    updateresult, err := atdb.UpdateOneDoc(config.Mongoconn, "kehadiran", filter, update)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
 
-	response := map[string]interface{}{"message": "Data kehadiran berhasil diperbarui", "updatedCount": updateresult.ModifiedCount}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+    response := map[string]interface{}{"message": "Data kehadiran berhasil diperbarui", "updatedCount": updateresult.ModifiedCount}
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
 }
 
 // DeleteKehadiran menghapus catatan kehadiran
 func DeleteKehadiran(w http.ResponseWriter, r *http.Request) {
-	var kehadiran model.Kehadiran
-	if err := json.NewDecoder(r.Body).Decode(&kehadiran); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+    var kehadiran model.Kehadiran
+    if err := json.NewDecoder(r.Body).Decode(&kehadiran); err != nil {
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
 
-	filter := bson.M{"name": kehadiran.Name}
+    filter := bson.M{"_id": kehadiran.ID}
 
-	deleteresult, err := atdb.DeleteOneDoc(config.Mongoconn, "kehadiran", filter)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+    deleteresult, err := atdb.DeleteOneDoc(config.Mongoconn, "kehadiran", filter)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
 
-	response := map[string]interface{}{"message": "Data kehadiran berhasil dihapus", "deletedCount": deleteresult.DeletedCount}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+    response := map[string]interface{}{"message": "Data kehadiran berhasil dihapus", "deletedCount": deleteresult.DeletedCount}
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
 }
 
 // GetAllKehadiran mendapatkan semua catatan kehadiran
 func GetAllKehadiran(w http.ResponseWriter, r *http.Request) {
-	var kehadiranList []model.Kehadiran
+    var kehadiranList []model.Kehadiran
 
-	results, err := atdb.GetAllDoc[[]model.Kehadiran](config.Mongoconn, "kehadiran", bson.M{})
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+    results, err := atdb.GetAllDoc[[]model.Kehadiran](config.Mongoconn, "kehadiran", bson.M{})
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
 
-	for _, result := range results {
-		var kehadiran model.Kehadiran
-		bsonBytes, _ := bson.Marshal(result)
-		bson.Unmarshal(bsonBytes, &kehadiran)
-		kehadiranList = append(kehadiranList, kehadiran)
-	}
+    for _, result := range results {
+        var kehadiran model.Kehadiran
+        bsonBytes, _ := bson.Marshal(result)
+        bson.Unmarshal(bsonBytes, &kehadiran)
+        kehadiranList = append(kehadiranList, kehadiran)
+    }
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(kehadiranList)
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(kehadiranList)
 }
