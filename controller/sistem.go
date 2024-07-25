@@ -212,7 +212,12 @@ func GetAllKehadiran(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	kehadiranList = results
+	for _, result := range results {
+		var kehadiran model.Kehadiran
+		bsonBytes, _ := bson.Marshal(result)
+		bson.Unmarshal(bsonBytes, &kehadiran)
+		kehadiranList = append(kehadiranList, kehadiran)
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(kehadiranList)
