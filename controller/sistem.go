@@ -176,21 +176,21 @@ func GetAllPresensi(w http.ResponseWriter, r *http.Request) {
 //Presensi Manual
 // AddKehadiran menambahkan catatan kehadiran baru
 func AddKehadiran(w http.ResponseWriter, r *http.Request) {
-	var kehadiran model.Kehadiran
-	if err := json.NewDecoder(r.Body).Decode(&kehadiran); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+    var kehadiran model.Kehadiran
+    if err := json.NewDecoder(r.Body).Decode(&kehadiran); err != nil {
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
 
-	insertedID, err := atdb.InsertOneDoc(config.Mongoconn, "kehadiran", kehadiran)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+    insertedID, err := atdb.InsertOneDoc(config.Mongoconn, "kehadiran", kehadiran)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
 
-	response := map[string]interface{}{"message": "Data kehadiran berhasil disimpan", "insertedID": insertedID}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+    response := map[string]interface{}{"message": "Data kehadiran berhasil disimpan", "insertedID": insertedID}
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
 }
 
 // UpdateKehadiran mengupdate catatan kehadiran
