@@ -176,100 +176,103 @@ func GetAllPresensi(w http.ResponseWriter, r *http.Request) {
 //Presensi Manual
 // AddKehadiran menambahkan catatan kehadiran baru
 func AddKehadiran(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Metode tidak diizinkan", http.StatusMethodNotAllowed)
-		return
-	}
+    if r.Method != http.MethodPost {
+        http.Error(w, "Metode tidak diizinkan", http.StatusMethodNotAllowed)
+        return
+    }
 
-	var kehadiran model.Kehadiran
-	if err := json.NewDecoder(r.Body).Decode(&kehadiran); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+    var kehadiran model.Kehadiran
+    if err := json.NewDecoder(r.Body).Decode(&kehadiran); err != nil {
+        response := map[string]string{"error": err.Error()}
+        helper.WriteJSON(w, http.StatusBadRequest, response)
+        return
+    }
 
-	_, err := atdb.InsertOneDoc(config.Mongoconn, "kehadiran", kehadiran)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+    _, err := atdb.InsertOneDoc(config.Mongoconn, "kehadiran", kehadiran)
+    if err != nil {
+        response := map[string]string{"error": err.Error()}
+        helper.WriteJSON(w, http.StatusInternalServerError, response)
+        return
+    }
 
-	response := map[string]string{"message": "Catatan kehadiran berhasil ditambahkan"}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+    response := map[string]string{"message": "Catatan kehadiran berhasil ditambahkan"}
+    helper.WriteJSON(w, http.StatusOK, response)
 }
 
 // GetAllKehadiran mendapatkan semua catatan kehadiran
+// GetAllKehadiran mendapatkan semua catatan kehadiran
 func GetAllKehadiran(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Metode tidak diizinkan", http.StatusMethodNotAllowed)
-		return
-	}
+    if r.Method != http.MethodGet {
+        http.Error(w, "Metode tidak diizinkan", http.StatusMethodNotAllowed)
+        return
+    }
 
-	var kehadiranList []model.Kehadiran
-	results, err := atdb.GetAllDoc[[]model.Kehadiran](config.Mongoconn, "kehadiran", bson.M{})
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+    results, err := atdb.GetAllDoc[[]model.Kehadiran](config.Mongoconn, "kehadiran", bson.M{})
+    if err != nil {
+        response := map[string]string{"error": err.Error()}
+        helper.WriteJSON(w, http.StatusInternalServerError, response)
+        return
+    }
 
-	for _, result := range results {
-		var kehadiran model.Kehadiran
-		bsonBytes, _ := bson.Marshal(result)
-		bson.Unmarshal(bsonBytes, &kehadiran)
-		kehadiranList = append(kehadiranList, kehadiran)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(kehadiranList)
+    helper.WriteJSON(w, http.StatusOK, results)
 }
+
 
 // UpdateKehadiran mengupdate catatan kehadiran
 func UpdateKehadiran(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPut {
-		http.Error(w, "Metode tidak diizinkan", http.StatusMethodNotAllowed)
-		return
-	}
+    if r.Method != http.MethodPut {
+        http.Error(w, "Metode tidak diizinkan", http.StatusMethodNotAllowed)
+        return
+    }
 
-	var kehadiran model.Kehadiran
-	if err := json.NewDecoder(r.Body).Decode(&kehadiran); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+    var kehadiran model.Kehadiran
+    if err := json.NewDecoder(r.Body).Decode(&kehadiran); err != nil {
+        response := map[string]string{"error": err.Error()}
+        helper.WriteJSON(w, http.StatusBadRequest, response)
+        return
+    }
 
-	filter := bson.M{"date": kehadiran.Date, "name": kehadiran.Name, "subject": kehadiran.Subject}
-	update := bson.M{"$set": kehadiran}
+    filter := bson.M{"date": kehadiran.Date, "name": kehadiran.Name, "subject": kehadiran.Subject}
+    update := bson.M{"$set": kehadiran}
 
-	updateresult, err := atdb.UpdateOneDoc(config.Mongoconn, "kehadiran", filter, update)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+    updateresult, err := atdb.UpdateOneDoc(config.Mongoconn, "kehadiran", filter, update)
+    if err != nil {
+        response := map[string]string{"error": err.Error()}
+        helper.WriteJSON(w, http.StatusInternalServerError, response)
+        return
+    }
 
-	response := map[string]interface{}{"message": "Catatan kehadiran berhasil diperbarui", "updatedCount": updateresult.ModifiedCount}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+    response := map[string]interface{}{"message": "Catatan kehadiran berhasil diperbarui", "updatedCount": updateresult.ModifiedCount}
+    helper.WriteJSON(w, http.StatusOK, response)
 }
 
 // DeleteKehadiran menghapus catatan kehadiran
 func DeleteKehadiran(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodDelete {
-		http.Error(w, "Metode tidak diizinkan", http.StatusMethodNotAllowed)
-		return
-	}
+    if r.Method != http.MethodDelete {
+        http.Error(w, "Metode tidak diizinkan", http.StatusMethodNotAllowed)
+        return
+    }
 
-	date := r.URL.Query().Get("date")
-	name := r.URL.Query().Get("name")
-	subject := r.URL.Query().Get("subject")
+    date := r.URL.Query().Get("date")
+    name := r.URL.Query().Get("name")
+    subject := r.URL.Query().Get("subject")
 
-	filter := bson.M{"date": date, "name": name, "subject": subject}
+    if date == "" || name == "" || subject == "" {
+        response := map[string]string{"error": "Parameter date, name, dan subject diperlukan"}
+        helper.WriteJSON(w, http.StatusBadRequest, response)
+        return
+    }
 
-	deleteresult, err := atdb.DeleteOneDoc(config.Mongoconn, "kehadiran", filter)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+    filter := bson.M{"date": date, "name": name, "subject": subject}
 
-	response := map[string]interface{}{"message": "Catatan kehadiran berhasil dihapus", "deletedCount": deleteresult.DeletedCount}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+    deleteresult, err := atdb.DeleteOneDoc(config.Mongoconn, "kehadiran", filter)
+    if err != nil {
+        response := map[string]string{"error": err.Error()}
+        helper.WriteJSON(w, http.StatusInternalServerError, response)
+        return
+    }
+
+    response := map[string]interface{}{"message": "Catatan kehadiran berhasil dihapus", "deletedCount": deleteresult.DeletedCount}
+    helper.WriteJSON(w, http.StatusOK, response)
 }
+
