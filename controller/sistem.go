@@ -236,8 +236,12 @@ func UpdateKehadiran(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filter := bson.M{"date": kehadiran.Date, "name": kehadiran.Name, "subject": kehadiran.Subject}
-	update := bson.M{"$set": kehadiran}
+	filter := bson.M{"date": kehadiran.Date}
+	update := bson.M{
+		"name":     kehadiran.Name,
+		"subject":  kehadiran.Subject,
+		"status":   kehadiran.Status,
+	}
 
 	updateresult, err := atdb.UpdateOneDoc(config.Mongoconn, "kehadiran", filter, update)
 	if err != nil {
@@ -257,11 +261,13 @@ func DeleteKehadiran(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	date := r.URL.Query().Get("date")
-	name := r.URL.Query().Get("name")
-	subject := r.URL.Query().Get("subject")
+	var kehadiran model.Kehadiran
+	if err := json.NewDecoder(r.Body).Decode(&kehadiran); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
-	filter := bson.M{"date": date, "name": name, "subject": subject}
+	filter := bson.M{"date": kehadiran.Date}
 
 	deleteresult, err := atdb.DeleteOneDoc(config.Mongoconn, "kehadiran", filter)
 	if err != nil {
