@@ -29,10 +29,16 @@ func URL(w http.ResponseWriter, r *http.Request) {
 		controller.GetNewToken(w, r)
 	case method == "POST" && helper.URLParam(path, "/webhook/nomor/:nomorwa"):
 		controller.PostInboxNomor(w, r)
+	
+	//Register
 	case method == "POST" && path == "/data/adminregister":
 		controller.RegisterHandler(w, r)
+	
+	//Login
 	case method == "POST" && path == "/data/user":
 		controller.GetUser(w, r)
+	
+	//Data Siswa
 	case method == "POST" && path == "/data/siswa":
 		controller.AddSiswa(w, r)
 	case method == "PUT" && path == "/data/siswa":
@@ -41,8 +47,21 @@ func URL(w http.ResponseWriter, r *http.Request) {
 		controller.DeleteSiswa(w, r)
 	case method == "GET" && path == "/data/siswa":
 		controller.GetAllSiswa(w, r)
+	
+	//Presensi WA
 	case method == "GET" && path == "/data/presensi":
-		controller.GetAllPresensi(w, r)	
+		controller.GetAllPresensi(w, r)
+		
+	//Presensi Manual
+	case method == "POST" && path == "/data/kehadiran":
+		controller.AddKehadiran(w, r)
+	case method == "GET" && path == "/data/kehadiran":
+		controller.GetAllKehadiran(w, r)
+	case method == "PUT" && path == "/data/kehadiran":
+		controller.UpdateKehadiran(w, r)
+	case method == "DELETE" && path == "/data/kehadiran":
+		controller.DeleteKehadiran(w, r)
+	
 	default:
 		controller.NotFound(w, r)
 	}
