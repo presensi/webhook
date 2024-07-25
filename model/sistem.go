@@ -25,7 +25,7 @@ type Siswa struct {
     ID    primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
     Nama  string             `bson:"nama" json:"nama"`
     Kelas string             `bson:"kelas" json:"kelas"`
-    Umur  int                `bson:"umur" json:"umur"`
+    JenisKelamin string      `bson:"jeniskelamin" json:"jeniskelamin"`
 	Phonenumber string 		 `bson:"phonenumber" json:"phonenumber"`
 }
 
